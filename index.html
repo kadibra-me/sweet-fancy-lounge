@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🍸 SWEET FANCY LOUNGE 🍸</title>
   <style>
-       body {
+    /* Premium Dark Club Theme */
+    body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 20px;
@@ -31,13 +32,13 @@
     }
     h4 { color: #00f0ff; text-shadow: 0 0 5px rgba(0, 240, 255, 0.4); margin-bottom: 8px; }
 
-    
+    /* Tables styling */
     table { border-collapse: collapse; width: 100%; margin-top: 15px; background: #151226; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
     th { background-color: #251b45; color: #00f0ff; padding: 12px; font-weight: 600; font-size: 14px; text-transform: uppercase; }
     td { border-bottom: 1px solid #2a244d; padding: 12px; text-align: center; font-size: 14px; }
     tr:hover { background-color: #1e1938; }
 
-    
+    /* Inputs, Selects, Buttons */
     input, select {
       padding: 10px 14px;
       margin: 6px;
@@ -66,6 +67,7 @@
     }
     button:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(255, 0, 127, 0.5); }
    
+    /* Specific Button Tweaks */
     button.delete-btn { background: linear-gradient(45deg, #ff4d4d, #cc0000); box-shadow: 0 3px 10px rgba(255,77,77,0.3); }
     button.delete-btn:hover { box-shadow: 0 5px 15px rgba(255,77,77,0.5); }
     button.edit-btn { background: linear-gradient(45deg, #ffaa00, #cc8800); box-shadow: 0 3px 10px rgba(255,170,0,0.3); }
@@ -73,7 +75,7 @@
     button.secondary-btn { background: linear-gradient(45deg, #00f0ff, #0077ff); box-shadow: 0 3px 10px rgba(0,240,255,0.2); color: #0d0a1a; }
     button.secondary-btn:hover { box-shadow: 0 5px 15px rgba(0,240,255,0.4); }
 
-   
+    /* Layout Containers */
     .section {
       background: rgba(25, 20, 45, 0.6);
       padding: 20px;
@@ -95,22 +97,23 @@
     }
     .login-container { max-width: 400px; margin: 40px auto; text-align: center; }
     .login-container input { width: 80%; display: inline-block; margin-bottom: 12px; }
+    .status-badge { font-size: 12px; padding: 4px 8px; border-radius: 4px; margin-left: 10px; background: #221a3b; color: #ff007f; }
   </style>
 </head>
 <body>
 
-  <h2>🍸 SWEET FANCY LOUNGE </h2>
+  <h2>🍸 SWEET FANCY LOUNGE <span id="syncStatus" class="status-badge">Connecting Cloud...</span></h2>
 
   <div id="navBar" class="nav-bar hidden">
     <span id="userDisplay" style="font-weight: bold; color: #00f0ff; text-shadow: 0 0 5px rgba(0,240,255,0.3);"></span>
-    <button onclick="logout()" class="delete-btn" style="padding: 6px 14px; margin: 0;">Logout</button>
+    <button id="logoutBtn" class="delete-btn" style="padding: 6px 14px; margin: 0;">Logout</button>
   </div>
 
   <div id="loginSection" class="section login-container">
     <h3 style="margin-top: 0; text-align: center;">System Access</h3>
     <input id="username" placeholder="Username"><br>
     <input id="password" type="password" placeholder="Password"><br>
-    <button onclick="login()" style="width: 88%; margin-top: 10px;">Enter Dashboard</button>
+    <button id="loginBtn" style="width: 88%; margin-top: 10px;">Enter Dashboard</button>
   </div>
 
   <div id="managerDashboard" class="hidden section">
@@ -127,8 +130,8 @@
     </select>
     <input id="drinkPrice" type="number" placeholder="Selling Price (KES)">
     <input id="buyPrice" type="number" placeholder="Buying Price (KES)">
-    <button id="saveDrinkBtn" onclick="saveDrink()">Save Drink</button>
-    <button id="cancelEditBtn" class="hidden" onclick="cancelDrinkEdit()" style="background:#444; box-shadow:none;">Cancel</button>
+    <button id="saveDrinkBtn">Save Drink</button>
+    <button id="cancelEditBtn" class="hidden" style="background:#444; box-shadow:none;">Cancel</button>
 
     <h4>📊 Live Menu Inventory</h4>
     <div style="overflow-x: auto;">
@@ -152,7 +155,7 @@
     </div>
 
     <div style="margin-top: 40px; border-top: 1px solid #3d346d; padding-top: 20px;">
-      <button onclick="toggleSecurityPanel()" class="secondary-btn">🔑 Security & Account Settings</button>
+      <button id="toggleSecurityBtn" class="secondary-btn">🔑 Security & Account Settings</button>
      
       <div id="securityPanel" class="hidden" style="background: #130f26; padding: 20px; border-radius: 8px; margin-top: 15px; border: 1px solid #3d346d;">
         <h4>Update Security Credentials</h4>
@@ -172,7 +175,7 @@
           </div>
         </div>
         <br>
-        <button onclick="changeCredentials()">Apply Updated Settings</button>
+        <button id="applySecurityBtn">Apply Updated Settings</button>
       </div>
     </div>
   </div>
@@ -180,11 +183,11 @@
   <div id="cashierDashboard" class="hidden section">
     <h3>Cashier Point of Sale 💵</h3>
     <p style="color: #aaa;">Record dynamic floor orders:</p>
-    <select id="saleDrink" onchange="updateSalePriceHint()"></select>
+    <select id="saleDrink"></select>
     <input id="saleQty" type="number" placeholder="Qty" value="1" min="1" style="width: 70px;">
     <span id="priceHint" style="font-weight: bold; color: #00f0ff; margin-left: 10px; text-shadow: 0 0 5px rgba(0,240,255,0.2);"></span>
     <br>
-    <button onclick="recordSale()">Complete Transaction</button>
+    <button id="recordSaleBtn">Complete Transaction</button>
 
     <h4>🧾 Active Shift Log</h4>
     <div style="overflow-x: auto;">
@@ -193,339 +196,348 @@
     <h3 id="grandTotal" style="color: #ff007f; border: none; text-align: right; margin-top: 20px; text-shadow: 0 0 8px rgba(255,0,127,0.4);">Grand Total: 0 KES</h3>
   </div>
 
-<script>
-// Logic State Variables
-let drinks = [];
-let sales = [];
-let currentRole = "";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
-// Dynamic credential handles with fallbacks
-let managerUser = "manager";
-let managerPass = "pub123"; 
-let cashierUser = "cashier";
-let cashierPass = "pub456"; 
-
-// ON APP START: Initialize storage hooks
-window.onload = function() {
-  loadDataFromLocalStorage();
-  uiRefreshAll();
+  // ⚠️ STEP 1: REPLACE THIS ENTIRE OBJECT WITH YOUR CONFIG FROM FIREBASE CONSOLE
+  const firebaseConfig = {
+  apiKey: "AIzaSyBnddPDgZFAX9-m5kUBp6tnWeS9_8uafq0",
+  authDomain: "sweet-fancy-pub.firebaseapp.com",
+  projectId: "sweet-fancy-pub",
+  storageBucket: "sweet-fancy-pub.firebasestorage.app",
+  messagingSenderId: "177643010018",
+  appId: "1:177643010018:web:eb5cafb7e6e36873b8abbb",
+  measurementId: "G-8DXKBZ08RY"
 };
 
-function loadDataFromLocalStorage() {
-  // Load Inventory Data
-  if (localStorage.getItem("sf_drinks")) {
-    drinks = JSON.parse(localStorage.getItem("sf_drinks"));
-  }
-  // Load Sales logs
-  if (localStorage.getItem("sf_sales")) {
-    sales = JSON.parse(localStorage.getItem("sf_sales"));
-  }
-  // Load Dynamic Credentials if modified previously
-  if (localStorage.getItem("sf_managerUser")) managerUser = localStorage.getItem("sf_managerUser");
-  if (localStorage.getItem("sf_managerPass")) managerPass = localStorage.getItem("sf_managerPass");
-  if (localStorage.getItem("sf_cashierUser")) cashierUser = localStorage.getItem("sf_cashierUser");
-  if (localStorage.getItem("sf_cashierPass")) cashierPass = localStorage.getItem("sf_cashierPass");
-}
+  // Initialize Firebase Cloud Connection
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-function saveDataToLocalStorage() {
-  localStorage.setItem("sf_drinks", JSON.stringify(drinks));
-  localStorage.setItem("sf_sales", JSON.stringify(sales));
-  localStorage.setItem("sf_managerUser", managerUser);
-  localStorage.setItem("sf_managerPass", managerPass);
-  localStorage.setItem("sf_cashierUser", cashierUser);
-  localStorage.setItem("sf_cashierPass", cashierPass);
-}
+  // App Central Memory State Handles
+  window.drinks = [];
+  window.sales = [];
+  let currentRole = "";
 
-// Authentication Core Engine
-function login() {
-  let user = document.getElementById("username").value.trim();
-  let pass = document.getElementById("password").value;
+  let managerUser = "manager";
+  let managerPass = "pub123"; 
+  let cashierUser = "cashier";
+  let cashierPass = "pub456"; 
 
-  if (user === managerUser && pass === managerPass) {
-    currentRole = "manager";
-    document.getElementById("loginSection").classList.add("hidden");
-    document.getElementById("managerDashboard").classList.remove("hidden");
-    document.getElementById("cashierDashboard").classList.remove("hidden");
-    document.getElementById("navBar").classList.remove("hidden");
-    document.getElementById("userDisplay").innerText = "👑 System Mode: Administrator";
-   
-    cancelDrinkEdit();
-    hideSecurityPanel();
-    uiRefreshAll();
-  } else if (user === cashierUser && pass === cashierPass) {
-    currentRole = "cashier";
-    document.getElementById("loginSection").classList.add("hidden");
-    document.getElementById("managerDashboard").classList.add("hidden");
-    document.getElementById("cashierDashboard").classList.remove("hidden");
-    document.getElementById("navBar").classList.remove("hidden");
-    document.getElementById("userDisplay").innerText = "💁‍♀️ System Mode: Cashier Desk";
-   
-    uiRefreshAll();
-  } else {
-    alert("❌ Access Denied: Invalid credentials.");
-  }
-}
-
-function logout() {
-  currentRole = "";
-  document.getElementById("username").value = "";
-  document.getElementById("password").value = "";
-  document.getElementById("loginSection").classList.remove("hidden");
-  document.getElementById("managerDashboard").classList.add("hidden");
-  document.getElementById("cashierDashboard").classList.add("hidden");
-  document.getElementById("navBar").classList.add("hidden");
-}
-
-// Integrated Security Management
-function toggleSecurityPanel() {
-  document.getElementById("securityPanel").classList.toggle("hidden");
-}
-
-function hideSecurityPanel() {
-  document.getElementById("securityPanel").classList.add("hidden");
-  document.getElementById("currentManagerVerify").value = "";
-  document.getElementById("newUser").value = "";
-  document.getElementById("newPass").value = "";
-  document.getElementById("newCashierUser").value = "";
-  document.getElementById("newCashierPass").value = "";
-}
-
-function changeCredentials() {
-  let confirmPass = document.getElementById("currentManagerVerify").value;
-
-  if (confirmPass !== managerPass) {
-    alert("❌ Verification Denied: Incorrect administrator password.");
-    return;
-  }
-
-  let mUser = document.getElementById("newUser").value.trim();
-  let mPass = document.getElementById("newPass").value;
-  let cUser = document.getElementById("newCashierUser").value.trim();
-  let cPass = document.getElementById("newCashierPass").value;
-
-  let changesMade = false;
-
-  if (mUser || mPass) {
-    if (!mUser || !mPass) {
-      alert("⚠️ Provide both a username and password to modify the Manager credentials.");
-      return;
+  // ON START: Open Live Listener Channel directly to Firestore Database Document
+  onSnapshot(doc(db, "sweet_fancy_lounge", "cloud_data"), (docSnap) => {
+    if (docSnap.exists()) {
+      const cloudData = docSnap.data();
+      window.drinks = cloudData.drinks || [];
+      window.sales = cloudData.sales || [];
+      managerUser = cloudData.managerUser || "manager";
+      managerPass = cloudData.managerPass || "pub123";
+      cashierUser = cloudData.cashierUser || "cashier";
+      cashierPass = cloudData.cashierPass || "pub456";
     }
-    managerUser = mUser;
-    managerPass = mPass;
-    changesMade = true;
-  }
-
-  if (cUser || cPass) {
-    if (!cUser || !cPass) {
-      alert("⚠️ Provide both a username and password to modify the Cashier credentials.");
-      return;
-    }
-    cashierUser = cUser;
-    cashierPass = cPass;
-    changesMade = true;
-  }
-
-  if (changesMade) {
-    saveDataToLocalStorage(); // Commit structural credential shifts to local store
-    alert("✅ System authentication keys updated successfully!");
-    hideSecurityPanel();
-  } else {
-    alert("⚠️ No changes were made because the entry fields are empty.");
-  }
-}
-
-// Menu Items CRUD Infrastructure
-function saveDrink() {
-  let name = document.getElementById("drinkName").value.trim();
-  let ml = parseInt(document.getElementById("drinkMl").value);
-  let price = parseInt(document.getElementById("drinkPrice").value);
-  let buy = parseInt(document.getElementById("buyPrice").value);
-  let editIdx = parseInt(document.getElementById("editIndex").value);
-
-  if (!name || isNaN(price) || isNaN(buy)) {
-    alert("⚠️ Please provide all drink attributes accurately.");
-    return;
-  }
-
-  if (editIdx === -1) {
-    drinks.push({name, ml, price, buy});
-  } else {
-    drinks[editIdx] = {name, ml, price, buy};
-  }
-
-  saveDataToLocalStorage(); // Auto-save inventory
-  cancelDrinkEdit();
-  uiRefreshAll();
-}
-
-function startEditDrink(index) {
-  let d = drinks[index];
-  document.getElementById("editIndex").value = index;
-  document.getElementById("drinkName").value = d.name;
-  document.getElementById("drinkMl").value = d.ml;
-  document.getElementById("drinkPrice").value = d.price;
-  document.getElementById("buyPrice").value = d.buy;
-
-  document.getElementById("drinkFormTitle").innerText = "📝 Edit Drink Profile";
-  document.getElementById("saveDrinkBtn").innerText = "Update Record";
-  document.getElementById("cancelEditBtn").classList.remove("hidden");
- 
-  document.getElementById("drinkFormTitle").scrollIntoView({ behavior: 'smooth' });
-}
-
-function cancelDrinkEdit() {
-  document.getElementById("editIndex").value = "-1";
-  document.getElementById("drinkName").value = "";
-  document.getElementById("drinkMl").value = "250";
-  document.getElementById("drinkPrice").value = "";
-  document.getElementById("buyPrice").value = "";
-
-  document.getElementById("drinkFormTitle").innerText = "🍹 Add New Drink";
-  document.getElementById("saveDrinkBtn").innerText = "Save Drink";
-  document.getElementById("cancelEditBtn").classList.add("hidden");
-}
-
-function deleteDrink(index) {
-  if (confirm(`Remove "${drinks[index].name}" permanently from inventory records?`)) {
-    drinks.splice(index, 1);
-    saveDataToLocalStorage(); // Sync deletions
-    cancelDrinkEdit();
+    document.getElementById("syncStatus").innerText = "Cloud Synced Live ✅";
+    document.getElementById("syncStatus").style.color = "#00ff66";
     uiRefreshAll();
-  }
-}
-
-// Transactions Engine
-function recordSale() {
-  let idx = document.getElementById("saleDrink").value;
-  if (idx === "" || drinks.length === 0) {
-    alert("⚠️ Transaction halted: No active stock menu profiles compiled.");
-    return;
-  }
- 
-  let qty = parseInt(document.getElementById("saleQty").value);
-  if (isNaN(qty) || qty <= 0) {
-    alert("⚠️ Please register a valid product unit quantity.");
-    return;
-  }
-
-  let drink = drinks[idx];
-  sales.push({
-    drink: drink.name,
-    ml: drink.ml,
-    qty: qty,
-    total: qty * drink.price,
-    date: new Date().toDateString()
+  }, (error) => {
+    console.error("Firebase sync error: ", error);
+    document.getElementById("syncStatus").innerText = "Offline Mode ⚠️";
+    document.getElementById("syncStatus").style.color = "#ff4d4d";
   });
 
-  document.getElementById("saleQty").value = "1";
-  saveDataToLocalStorage(); // Auto-save transaction metrics
-  uiRefreshAll();
-}
-
-function updateSalePriceHint() {
-  let idx = document.getElementById("saleDrink").value;
-  let hint = document.getElementById("priceHint");
-  if(idx !== "" && drinks[idx]) {
-    hint.innerText = `@ ${drinks[idx].price} KES`;
-  } else {
-    hint.innerText = "";
-  }
-}
-
-// Dashboard UI Rendering Pipeline
-function uiRefreshAll() {
-  refreshDrinksTable();
-  refreshCashierDropdown();
-  refreshSalesTable();
-  updateFinancialReports();
-}
-
-function refreshDrinksTable() {
-  let table = document.getElementById("drinkTable");
-  table.innerHTML = `<tr>
-    <th>Drink Profile</th>
-    <th>Capacity</th>
-    <th>Sale Unit (KES)</th>
-    <th>Cost Unit (KES)</th>
-    <th>Performance Outlook</th>
-    <th>Actions</th>
-  </tr>`;
-
-  if(drinks.length === 0) {
-    table.innerHTML += `<tr><td colspan="6" style="color:#7f7a9e; font-style:italic;">Inventory is empty. Add profiles above.</td></tr>`;
-    return;
+  // Push Local App state updates straight into the cloud pipeline
+  async function pushToCloud() {
+    document.getElementById("syncStatus").innerText = "Saving to Cloud... 🔄";
+    document.getElementById("syncStatus").style.color = "#00f0ff";
+    try {
+      await setDoc(doc(db, "sweet_fancy_lounge", "cloud_data"), {
+        drinks: window.drinks,
+        sales: window.sales,
+        managerUser: managerUser,
+        managerPass: managerPass,
+        cashierUser: cashierUser,
+        cashierPass: cashierPass
+      });
+    } catch (err) {
+      alert("Cloud Save Failed: Check Firebase permissions configuration Rules!");
+      console.error(err);
+    }
   }
 
-  drinks.forEach((d, i) => {
-    let status = "";
-    if (d.price < d.buy) {
-      status = "<span style='color:#ff4d4d; font-weight:bold;'>Loss ❌</span>";
+  // Bind UI Interactions directly into JavaScript logic context
+  document.getElementById("loginBtn").addEventListener("click", login);
+  document.getElementById("logoutBtn").addEventListener("click", logout);
+  document.getElementById("toggleSecurityBtn").addEventListener("click", toggleSecurityPanel);
+  document.getElementById("applySecurityBtn").addEventListener("click", changeCredentials);
+  document.getElementById("saveDrinkBtn").addEventListener("click", saveDrink);
+  document.getElementById("cancelEditBtn").addEventListener("click", cancelDrinkEdit);
+  document.getElementById("recordSaleBtn").addEventListener("click", recordSale);
+  document.getElementById("saleDrink").addEventListener("change", updateSalePriceHint);
+
+  // Authentication Core Engine
+  function login() {
+    let user = document.getElementById("username").value.trim();
+    let pass = document.getElementById("password").value;
+
+    if (user === managerUser && pass === managerPass) {
+      currentRole = "manager";
+      document.getElementById("loginSection").classList.add("hidden");
+      document.getElementById("managerDashboard").classList.remove("hidden");
+      document.getElementById("cashierDashboard").classList.remove("hidden");
+      document.getElementById("navBar").classList.remove("hidden");
+      document.getElementById("userDisplay").innerText = "👑 System Mode: Administrator";
+     
+      cancelDrinkEdit();
+      hideSecurityPanel();
+      uiRefreshAll();
+    } else if (user === cashierUser && pass === cashierPass) {
+      currentRole = "cashier";
+      document.getElementById("loginSection").classList.add("hidden");
+      document.getElementById("managerDashboard").classList.add("hidden");
+      document.getElementById("cashierDashboard").classList.remove("hidden");
+      document.getElementById("navBar").classList.remove("hidden");
+      document.getElementById("userDisplay").innerText = "💁‍♀️ System Mode: Cashier Desk";
+     
+      uiRefreshAll();
     } else {
-      let profit = d.price - d.buy;
-      status = "<span style='color:#00ff66; font-weight:bold;'>Profit +${profit} KES</span>";
+      alert("❌ Access Denied: Invalid credentials.");
+    }
+  }
+
+  function logout() {
+    currentRole = "";
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+    document.getElementById("loginSection").classList.remove("hidden");
+    document.getElementById("managerDashboard").classList.add("hidden");
+    document.getElementById("cashierDashboard").classList.add("hidden");
+    document.getElementById("navBar").classList.add("hidden");
+  }
+
+  // Security Configuration Panels
+  function toggleSecurityPanel() {
+    document.getElementById("securityPanel").classList.toggle("hidden");
+  }
+
+  function hideSecurityPanel() {
+    document.getElementById("securityPanel").classList.add("hidden");
+    document.getElementById("currentManagerVerify").value = "";
+    document.getElementById("newUser").value = "";
+    document.getElementById("newPass").value = "";
+    document.getElementById("newCashierUser").value = "";
+    document.getElementById("newCashierPass").value = "";
+  }
+
+  function changeCredentials() {
+    let confirmPass = document.getElementById("currentManagerVerify").value;
+    if (confirmPass !== managerPass) {
+      alert("❌ Verification Denied: Incorrect administrator password.");
+      return;
+    }
+
+    let mUser = document.getElementById("newUser").value.trim();
+    let mPass = document.getElementById("newPass").value;
+    let cUser = document.getElementById("newCashierUser").value.trim();
+    let cPass = document.getElementById("newCashierPass").value;
+
+    let changesMade = false;
+    if (mUser || mPass) {
+      if (!mUser || !mPass) { alert("⚠️ Provide both a username and password for Manager."); return; }
+      managerUser = mUser; managerPass = mPass; changesMade = true;
+    }
+    if (cUser || cPass) {
+      if (!cUser || !cPass) { alert("⚠️ Provide both a username and password for Cashier."); return; }
+      cashierUser = cUser; cashierPass = cPass; changesMade = true;
+    }
+
+    if (changesMade) {
+      pushToCloud();
+      alert("✅ System cloud authentication credentials updated!");
+      hideSecurityPanel();
+    } else {
+      alert("⚠️ Entry fields are empty.");
+    }
+  }
+
+  // Menu Items Inventory Management (CRUD)
+  function saveDrink() {
+    let name = document.getElementById("drinkName").value.trim();
+    let ml = parseInt(document.getElementById("drinkMl").value);
+    let price = parseInt(document.getElementById("drinkPrice").value);
+    let buy = parseInt(document.getElementById("buyPrice").value);
+    let editIdx = parseInt(document.getElementById("editIndex").value);
+
+    if (!name || isNaN(price) || isNaN(buy)) {
+      alert("⚠️ Complete all metrics parameters.");
+      return;
+    }
+
+    if (editIdx === -1) {
+      window.drinks.push({name, ml, price, buy});
+    } else {
+      window.drinks[editIdx] = {name, ml, price, buy};
+    }
+
+    pushToCloud();
+    cancelDrinkEdit();
+  }
+
+  window.startEditDrink = function(index) {
+    let d = window.drinks[index];
+    document.getElementById("editIndex").value = index;
+    document.getElementById("drinkName").value = d.name;
+    document.getElementById("drinkMl").value = d.ml;
+    document.getElementById("drinkPrice").value = d.price;
+    document.getElementById("buyPrice").value = d.buy;
+
+    document.getElementById("drinkFormTitle").innerText = "📝 Edit Drink Profile";
+    document.getElementById("saveDrinkBtn").innerText = "Update Record";
+    document.getElementById("cancelEditBtn").classList.remove("hidden");
+    document.getElementById("drinkFormTitle").scrollIntoView({ behavior: 'smooth' });
+  };
+
+  function cancelDrinkEdit() {
+    document.getElementById("editIndex").value = "-1";
+    document.getElementById("drinkName").value = "";
+    document.getElementById("drinkMl").value = "250";
+    document.getElementById("drinkPrice").value = "";
+    document.getElementById("buyPrice").value = "";
+
+    document.getElementById("drinkFormTitle").innerText = "🍹 Add New Drink";
+    document.getElementById("saveDrinkBtn").innerText = "Save Drink";
+    document.getElementById("cancelEditBtn").classList.add("hidden");
+  }
+
+  window.deleteDrink = function(index) {
+    if (confirm(`Remove "${window.drinks[index].name}" permanently from inventory records?`)) {
+      window.drinks.splice(index, 1);
+      pushToCloud();
+      cancelDrinkEdit();
+    }
+  };
+
+  // Floor Transactions Logic
+  function recordSale() {
+    let idx = document.getElementById("saleDrink").value;
+    if (idx === "" || window.drinks.length === 0) {
+      alert("⚠️ Inventory options are empty.");
+      return;
     }
    
-    table.innerHTML += `<tr>
-      <td><b style="color:#fff;">${d.name}</b></td>
-      <td>${d.ml} ml</td>
-      <td style="color:#00f0ff;">${d.price}</td>
-      <td>${d.buy}</td>
-      <td>${status}</td>
-      <td>
-        <button class="edit-btn" style="padding: 4px 10px; font-size:12px;" onclick="startEditDrink(${i})">Edit</button>
-        <button class="delete-btn" style="padding: 4px 10px; font-size:12px;" onclick="deleteDrink(${i})">Delete</button>
-      </td>
-    </tr>`;
-  });
-}
+    let qty = parseInt(document.getElementById("saleQty").value);
+    if (isNaN(qty) || qty <= 0) {
+      alert("⚠️ Register a valid transaction quantity.");
+      return;
+    }
 
-function refreshCashierDropdown() {
-  let select = document.getElementById("saleDrink");
-  select.innerHTML = "";
- 
-  if (drinks.length === 0) {
-    select.innerHTML = "<option value=''>-- No Stock Item Loaded --</option>";
+    let drink = window.drinks[idx];
+    window.sales.push({
+      drink: drink.name,
+      ml: drink.ml,
+      qty: qty,
+      total: qty * drink.price,
+      date: new Date().toDateString()
+    });
+
+    document.getElementById("saleQty").value = "1";
+    pushToCloud();
+  }
+
+  function updateSalePriceHint() {
+    let idx = document.getElementById("saleDrink").value;
+    let hint = document.getElementById("priceHint");
+    if(idx !== "" && window.drinks[idx]) {
+      hint.innerText = `@ ${window.drinks[idx].price} KES`;
+    } else {
+      hint.innerText = "";
+    }
+  }
+
+  // System Core Presentation Layer Pipeline Updates
+  function uiRefreshAll() {
+    refreshDrinksTable();
+    refreshCashierDropdown();
+    refreshSalesTable();
+    updateFinancialReports();
+  }
+
+  function refreshDrinksTable() {
+    let table = document.getElementById("drinkTable");
+    table.innerHTML = `<tr><th>Drink Profile</th><th>Capacity</th><th>Sale Unit (KES)</th><th>Cost Unit (KES)</th><th>Performance Outlook</th><th>Actions</th></tr>`;
+
+    if(window.drinks.length === 0) {
+      table.innerHTML += `<tr><td colspan="6" style="color:#7f7a9e; font-style:italic;">Inventory is empty. Add profiles above.</td></tr>`;
+      return;
+    }
+
+    window.drinks.forEach((d, i) => {
+      let status = d.price < d.buy ?
+        "<span style='color:#ff4d4d; font-weight:bold;'>Loss ❌</span>" :
+        `<span style='color:#00ff66; font-weight:bold;'>Profit +${d.price - d.buy} KES</span>`;
+     
+      table.innerHTML += `<tr>
+        <td><b style="color:#fff;">${d.name}</b></td>
+        <td>${d.ml} ml</td>
+        <td style="color:#00f0ff;">${d.price}</td>
+        <td>${d.buy}</td>
+        <td>${status}</td>
+        <td>
+          <button class="edit-btn" style="padding: 4px 10px; font-size:12px;" onclick="startEditDrink(${i})">Edit</button>
+          <button class="delete-btn" style="padding: 4px 10px; font-size:12px;" onclick="deleteDrink(${i})">Delete</button>
+        </td>
+      </tr>`;
+    });
+  }
+
+  function refreshCashierDropdown() {
+    let select = document.getElementById("saleDrink");
+    let prevVal = select.value;
+    select.innerHTML = "";
+   
+    if (window.drinks.length === 0) {
+      select.innerHTML = "<option value=''>-- No Stock Item Loaded --</option>";
+      updateSalePriceHint();
+      return;
+    }
+
+    window.drinks.forEach((d, i) => {
+      select.innerHTML += `<option value="${i}">${d.name} (${d.ml} ml)</option>`;
+    });
+    if(prevVal && window.drinks[prevVal]) select.value = prevVal;
     updateSalePriceHint();
-    return;
   }
 
-  drinks.forEach((d, i) => {
-    select.innerHTML += `<option value="${i}">${d.name} (${d.ml} ml)</option>`;
-  });
-  updateSalePriceHint();
-}
+  function refreshSalesTable() {
+    let table = document.getElementById("salesTable");
+    table.innerHTML = "<tr><th>Product Ledger</th><th>Units Sold</th><th>Gross Value</th></tr>";
+   
+    let currentDayString = new Date().toDateString();
+    let todaySales = window.sales.filter(s => s.date === currentDayString);
+    let grand = 0;
 
-function refreshSalesTable() {
-  let table = document.getElementById("salesTable");
-  table.innerHTML = "<tr><th>Product Ledger</th><th>Units Sold</th><th>Gross Value</th></tr>";
- 
-  let currentDayString = new Date().toDateString();
-  let todaySales = sales.filter(s => s.date === currentDayString);
-  let grand = 0;
+    if (todaySales.length === 0) {
+      table.innerHTML += `<tr><td colspan="3" style="color:#7f7a9e; font-style:italic;">No active transactions on record for this shift.</td></tr>`;
+      document.getElementById("grandTotal").innerText = "Grand Total: 0 KES";
+      return;
+    }
 
-  if (todaySales.length === 0) {
-    table.innerHTML += `<tr><td colspan="3" style="color:#7f7a9e; font-style:italic;">No active transactions on record for this shift.</td></tr>`;
-    document.getElementById("grandTotal").innerText = "Grand Total: 0 KES";
-    return;
+    todaySales.forEach(s => {
+      table.innerHTML += `<tr><td>${s.drink} (${s.ml} ml)</td><td>${s.qty}</td><td style="color:#ff007f;">${s.total} KES</td></tr>`;
+      grand += s.total;
+    });
+    document.getElementById("grandTotal").innerText = "Grand Total: " + grand + " KES";
   }
 
-  todaySales.forEach(s => {
-    table.innerHTML += `<tr><td>${s.drink} (${s.ml} ml)</td><td>${s.qty}</td><td style="color:#ff007f;">${s.total} KES</td></tr>`;
-    grand += s.total;
-  });
-  document.getElementById("grandTotal").innerText = "Grand Total: " + grand + " KES";
-}
-
-function updateFinancialReports() {
-  let today = new Date().toDateString();
-  let daily = sales.filter(s => s.date === today).reduce((sum, s) => sum + s.total, 0);
-  let weekly = sales.slice(-7).reduce((sum, s) => sum + s.total, 0);
-  let monthly = sales.reduce((sum, s) => sum + s.total, 0);
- 
-  document.getElementById("reportDaily").innerText = `${daily} KES`;
-  document.getElementById("reportWeekly").innerText = `${weekly} KES`;
-  document.getElementById("reportMonthly").innerText = `${monthly} KES`;
-}
+  function updateFinancialReports() {
+    let today = new Date().toDateString();
+    let daily = window.sales.filter(s => s.date === today).reduce((sum, s) => sum + s.total, 0);
+    let weekly = window.sales.slice(-7).reduce((sum, s) => sum + s.total, 0);
+    let monthly = window.sales.reduce((sum, s) => sum + s.total, 0);
+   
+    document.getElementById("reportDaily").innerText = `${daily} KES`;
+    document.getElementById("reportWeekly").innerText = `${weekly} KES`;
+    document.getElementById("reportMonthly").innerText = `${monthly} KES`;
+  }
 </script>
 </body>
 </html>
