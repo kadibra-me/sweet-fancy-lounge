@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🍸 SWEET FANCY LOUNGE 🍸</title>
+  <style>
+       body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: radial-gradient(circle at center, #1a1a2e 0%, #0f0c1b 100%);
+      color: #e0e0e6;
+      min-height: 100vh;
+    }
+    .hidden { display: none !important; }
+   
+    h2 {
+      text-align: center;
+      color: #ff007f;
+      text-shadow: 0 0 10px rgba(255, 0, 127, 0.6), 0 0 20px rgba(255, 0, 127, 0.4);
+      font-size: 2rem;
+      margin-bottom: 25px;
+      letter-spacing: 2px;
+    }
+    h3 {
+      color: #b013ff;
+      border-bottom: 2px solid rgba(176, 19, 255, 0.3);
+      padding-bottom: 8px;
+      text-shadow: 0 0 8px rgba(176, 19, 255, 0.5);
+    }
+    h4 { color: #00f0ff; text-shadow: 0 0 5px rgba(0, 240, 255, 0.4); margin-bottom: 8px; }
+
+    
+    table { border-collapse: collapse; width: 100%; margin-top: 15px; background: #151226; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    th { background-color: #251b45; color: #00f0ff; padding: 12px; font-weight: 600; font-size: 14px; text-transform: uppercase; }
+    td { border-bottom: 1px solid #2a244d; padding: 12px; text-align: center; font-size: 14px; }
+    tr:hover { background-color: #1e1938; }
+
+    
+    input, select {
+      padding: 10px 14px;
+      margin: 6px;
+      border-radius: 6px;
+      border: 1px solid #3d346d;
+      background: #0d0a1a;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: 0.3s;
+    }
+    input:focus, select:focus { border-color: #00f0ff; box-shadow: 0 0 8px rgba(0, 240, 255, 0.3); }
+   
+    button {
+      padding: 10px 18px;
+      margin: 6px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      background: linear-gradient(45deg, #ff007f, #b013ff);
+      color: white;
+      box-shadow: 0 3px 10px rgba(255, 0, 127, 0.3);
+    }
+    button:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(255, 0, 127, 0.5); }
+   
+    button.delete-btn { background: linear-gradient(45deg, #ff4d4d, #cc0000); box-shadow: 0 3px 10px rgba(255,77,77,0.3); }
+    button.delete-btn:hover { box-shadow: 0 5px 15px rgba(255,77,77,0.5); }
+    button.edit-btn { background: linear-gradient(45deg, #ffaa00, #cc8800); box-shadow: 0 3px 10px rgba(255,170,0,0.3); }
+    button.edit-btn:hover { box-shadow: 0 5px 15px rgba(255,170,0,0.5); }
+    button.secondary-btn { background: linear-gradient(45deg, #00f0ff, #0077ff); box-shadow: 0 3px 10px rgba(0,240,255,0.2); color: #0d0a1a; }
+    button.secondary-btn:hover { box-shadow: 0 5px 15px rgba(0,240,255,0.4); }
+
+   
+    .section {
+      background: rgba(25, 20, 45, 0.6);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      border: 1px solid rgba(176, 19, 255, 0.15);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    .nav-bar {
+      background: rgba(21, 18, 38, 0.8);
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #2a244d;
+    }
+    .login-container { max-width: 400px; margin: 40px auto; text-align: center; }
+    .login-container input { width: 80%; display: inline-block; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+  <h2>🍸 SWEET FANCY LOUNGE </h2>
+
+  <div id="navBar" class="nav-bar hidden">
+    <span id="userDisplay" style="font-weight: bold; color: #00f0ff; text-shadow: 0 0 5px rgba(0,240,255,0.3);"></span>
+    <button onclick="logout()" class="delete-btn" style="padding: 6px 14px; margin: 0;">Logout</button>
+  </div>
+
+  <div id="loginSection" class="section login-container">
+    <h3 style="margin-top: 0; text-align: center;">System Access</h3>
+    <input id="username" placeholder="Username"><br>
+    <input id="password" type="password" placeholder="Password"><br>
+    <button onclick="login()" style="width: 88%; margin-top: 10px;">Enter Dashboard</button>
+  </div>
+
+  <div id="managerDashboard" class="hidden section">
+    <h3>Manager Control Center 👩‍💼</h3>
+
+    <h4 id="drinkFormTitle">🍹 Add New Drink</h4>
+    <input id="editIndex" type="hidden" value="-1">
+    <input id="drinkName" placeholder="Drink Name">
+    <select id="drinkMl">
+      <option value="250">250 ml</option>
+      <option value="500">500 ml</option>
+      <option value="750">750 ml</option>
+      <option value="1000">1000 ml</option>
+    </select>
+    <input id="drinkPrice" type="number" placeholder="Selling Price (KES)">
+    <input id="buyPrice" type="number" placeholder="Buying Price (KES)">
+    <button id="saveDrinkBtn" onclick="saveDrink()">Save Drink</button>
+    <button id="cancelEditBtn" class="hidden" onclick="cancelDrinkEdit()" style="background:#444; box-shadow:none;">Cancel</button>
+
+    <h4>📊 Live Menu Inventory</h4>
+    <div style="overflow-x: auto;">
+      <table id="drinkTable"></table>
+    </div>
+
+    <h4>📈 Financial Reports</h4>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 10px;">
+      <div style="background: #110d24; padding: 15px; border-radius: 8px; border-left: 4px solid #ff007f;">
+        <span style="color: #aaa; font-size: 12px; text-transform: uppercase;">Today's Revenue</span>
+        <div id="reportDaily" style="font-size: 20px; font-weight: bold; color: #fff; margin-top: 5px;">0 KES</div>
+      </div>
+      <div style="background: #110d24; padding: 15px; border-radius: 8px; border-left: 4px solid #b013ff;">
+        <span style="color: #aaa; font-size: 12px; text-transform: uppercase;">7-Day Rolling Total</span>
+        <div id="reportWeekly" style="font-size: 20px; font-weight: bold; color: #fff; margin-top: 5px;">0 KES</div>
+      </div>
+      <div style="background: #110d24; padding: 15px; border-radius: 8px; border-left: 4px solid #00f0ff;">
+        <span style="color: #aaa; font-size: 12px; text-transform: uppercase;">Monthly Gross</span>
+        <div id="reportMonthly" style="font-size: 20px; font-weight: bold; color: #fff; margin-top: 5px;">0 KES</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px; border-top: 1px solid #3d346d; padding-top: 20px;">
+      <button onclick="toggleSecurityPanel()" class="secondary-btn">🔑 Security & Account Settings</button>
+     
+      <div id="securityPanel" class="hidden" style="background: #130f26; padding: 20px; border-radius: 8px; margin-top: 15px; border: 1px solid #3d346d;">
+        <h4>Update Security Credentials</h4>
+        <p style="font-size: 13px; color: #aaa; margin: 0 0 15px 0;">To deploy changes, confirm your current manager password first.</p>
+        <input id="currentManagerVerify" type="password" placeholder="Current Manager Password" style="width: 260px;"><br>
+       
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 15px; border-top: 1px dashed #2a244d; padding-top: 15px;">
+          <div>
+            <h5 style="color: #b013ff; margin: 0 0 10px 5px; font-size: 14px;">Modify Manager Account</h5>
+            <input id="newUser" placeholder="New Manager Username" style="width: 90%;"><br>
+            <input id="newPass" type="password" placeholder="New Manager Password" style="width: 90%;">
+          </div>
+          <div>
+            <h5 style="color: #00f0ff; margin: 0 0 10px 5px; font-size: 14px;">Modify Cashier Account</h5>
+            <input id="newCashierUser" placeholder="New Cashier Username" style="width: 90%;"><br>
+            <input id="newCashierPass" type="password" placeholder="New Cashier Password" style="width: 90%;">
+          </div>
+        </div>
+        <br>
+        <button onclick="changeCredentials()">Apply Updated Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="cashierDashboard" class="hidden section">
+    <h3>Cashier Point of Sale 💵</h3>
+    <p style="color: #aaa;">Record dynamic floor orders:</p>
+    <select id="saleDrink" onchange="updateSalePriceHint()"></select>
+    <input id="saleQty" type="number" placeholder="Qty" value="1" min="1" style="width: 70px;">
+    <span id="priceHint" style="font-weight: bold; color: #00f0ff; margin-left: 10px; text-shadow: 0 0 5px rgba(0,240,255,0.2);"></span>
+    <br>
+    <button onclick="recordSale()">Complete Transaction</button>
+
+    <h4>🧾 Active Shift Log</h4>
+    <div style="overflow-x: auto;">
+      <table id="salesTable"></table>
+    </div>
+    <h3 id="grandTotal" style="color: #ff007f; border: none; text-align: right; margin-top: 20px; text-shadow: 0 0 8px rgba(255,0,127,0.4);">Grand Total: 0 KES</h3>
+  </div>
+
+<script>
+// Logic State Variables
+let drinks = [];
+let sales = [];
+let currentRole = "";
+
+// Dynamic credential handles with fallbacks
+let managerUser = "manager";
+let managerPass = "pub123"; 
+let cashierUser = "cashier";
+let cashierPass = "pub456"; 
+
+// ON APP START: Initialize storage hooks
+window.onload = function() {
+  loadDataFromLocalStorage();
+  uiRefreshAll();
+};
+
+function loadDataFromLocalStorage() {
+  // Load Inventory Data
+  if (localStorage.getItem("sf_drinks")) {
+    drinks = JSON.parse(localStorage.getItem("sf_drinks"));
+  }
+  // Load Sales logs
+  if (localStorage.getItem("sf_sales")) {
+    sales = JSON.parse(localStorage.getItem("sf_sales"));
+  }
+  // Load Dynamic Credentials if modified previously
+  if (localStorage.getItem("sf_managerUser")) managerUser = localStorage.getItem("sf_managerUser");
+  if (localStorage.getItem("sf_managerPass")) managerPass = localStorage.getItem("sf_managerPass");
+  if (localStorage.getItem("sf_cashierUser")) cashierUser = localStorage.getItem("sf_cashierUser");
+  if (localStorage.getItem("sf_cashierPass")) cashierPass = localStorage.getItem("sf_cashierPass");
+}
+
+function saveDataToLocalStorage() {
+  localStorage.setItem("sf_drinks", JSON.stringify(drinks));
+  localStorage.setItem("sf_sales", JSON.stringify(sales));
+  localStorage.setItem("sf_managerUser", managerUser);
+  localStorage.setItem("sf_managerPass", managerPass);
+  localStorage.setItem("sf_cashierUser", cashierUser);
+  localStorage.setItem("sf_cashierPass", cashierPass);
+}
+
+// Authentication Core Engine
+function login() {
+  let user = document.getElementById("username").value.trim();
+  let pass = document.getElementById("password").value;
+
+  if (user === managerUser && pass === managerPass) {
+    currentRole = "manager";
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("managerDashboard").classList.remove("hidden");
+    document.getElementById("cashierDashboard").classList.remove("hidden");
+    document.getElementById("navBar").classList.remove("hidden");
+    document.getElementById("userDisplay").innerText = "👑 System Mode: Administrator";
+   
+    cancelDrinkEdit();
+    hideSecurityPanel();
+    uiRefreshAll();
+  } else if (user === cashierUser && pass === cashierPass) {
+    currentRole = "cashier";
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("managerDashboard").classList.add("hidden");
+    document.getElementById("cashierDashboard").classList.remove("hidden");
+    document.getElementById("navBar").classList.remove("hidden");
+    document.getElementById("userDisplay").innerText = "💁‍♀️ System Mode: Cashier Desk";
+   
+    uiRefreshAll();
+  } else {
+    alert("❌ Access Denied: Invalid credentials.");
+  }
+}
+
+function logout() {
+  currentRole = "";
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+  document.getElementById("loginSection").classList.remove("hidden");
+  document.getElementById("managerDashboard").classList.add("hidden");
+  document.getElementById("cashierDashboard").classList.add("hidden");
+  document.getElementById("navBar").classList.add("hidden");
+}
+
+// Integrated Security Management
+function toggleSecurityPanel() {
+  document.getElementById("securityPanel").classList.toggle("hidden");
+}
+
+function hideSecurityPanel() {
+  document.getElementById("securityPanel").classList.add("hidden");
+  document.getElementById("currentManagerVerify").value = "";
+  document.getElementById("newUser").value = "";
+  document.getElementById("newPass").value = "";
+  document.getElementById("newCashierUser").value = "";
+  document.getElementById("newCashierPass").value = "";
+}
+
+function changeCredentials() {
+  let confirmPass = document.getElementById("currentManagerVerify").value;
+
+  if (confirmPass !== managerPass) {
+    alert("❌ Verification Denied: Incorrect administrator password.");
+    return;
+  }
+
+  let mUser = document.getElementById("newUser").value.trim();
+  let mPass = document.getElementById("newPass").value;
+  let cUser = document.getElementById("newCashierUser").value.trim();
+  let cPass = document.getElementById("newCashierPass").value;
+
+  let changesMade = false;
+
+  if (mUser || mPass) {
+    if (!mUser || !mPass) {
+      alert("⚠️ Provide both a username and password to modify the Manager credentials.");
+      return;
+    }
+    managerUser = mUser;
+    managerPass = mPass;
+    changesMade = true;
+  }
+
+  if (cUser || cPass) {
+    if (!cUser || !cPass) {
+      alert("⚠️ Provide both a username and password to modify the Cashier credentials.");
+      return;
+    }
+    cashierUser = cUser;
+    cashierPass = cPass;
+    changesMade = true;
+  }
+
+  if (changesMade) {
+    saveDataToLocalStorage(); // Commit structural credential shifts to local store
+    alert("✅ System authentication keys updated successfully!");
+    hideSecurityPanel();
+  } else {
+    alert("⚠️ No changes were made because the entry fields are empty.");
+  }
+}
+
+// Menu Items CRUD Infrastructure
+function saveDrink() {
+  let name = document.getElementById("drinkName").value.trim();
+  let ml = parseInt(document.getElementById("drinkMl").value);
+  let price = parseInt(document.getElementById("drinkPrice").value);
+  let buy = parseInt(document.getElementById("buyPrice").value);
+  let editIdx = parseInt(document.getElementById("editIndex").value);
+
+  if (!name || isNaN(price) || isNaN(buy)) {
+    alert("⚠️ Please provide all drink attributes accurately.");
+    return;
+  }
+
+  if (editIdx === -1) {
+    drinks.push({name, ml, price, buy});
+  } else {
+    drinks[editIdx] = {name, ml, price, buy};
+  }
+
+  saveDataToLocalStorage(); // Auto-save inventory
+  cancelDrinkEdit();
+  uiRefreshAll();
+}
+
+function startEditDrink(index) {
+  let d = drinks[index];
+  document.getElementById("editIndex").value = index;
+  document.getElementById("drinkName").value = d.name;
+  document.getElementById("drinkMl").value = d.ml;
+  document.getElementById("drinkPrice").value = d.price;
+  document.getElementById("buyPrice").value = d.buy;
+
+  document.getElementById("drinkFormTitle").innerText = "📝 Edit Drink Profile";
+  document.getElementById("saveDrinkBtn").innerText = "Update Record";
+  document.getElementById("cancelEditBtn").classList.remove("hidden");
+ 
+  document.getElementById("drinkFormTitle").scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelDrinkEdit() {
+  document.getElementById("editIndex").value = "-1";
+  document.getElementById("drinkName").value = "";
+  document.getElementById("drinkMl").value = "250";
+  document.getElementById("drinkPrice").value = "";
+  document.getElementById("buyPrice").value = "";
+
+  document.getElementById("drinkFormTitle").innerText = "🍹 Add New Drink";
+  document.getElementById("saveDrinkBtn").innerText = "Save Drink";
+  document.getElementById("cancelEditBtn").classList.add("hidden");
+}
+
+function deleteDrink(index) {
+  if (confirm(`Remove "${drinks[index].name}" permanently from inventory records?`)) {
+    drinks.splice(index, 1);
+    saveDataToLocalStorage(); // Sync deletions
+    cancelDrinkEdit();
+    uiRefreshAll();
+  }
+}
+
+// Transactions Engine
+function recordSale() {
+  let idx = document.getElementById("saleDrink").value;
+  if (idx === "" || drinks.length === 0) {
+    alert("⚠️ Transaction halted: No active stock menu profiles compiled.");
+    return;
+  }
+ 
+  let qty = parseInt(document.getElementById("saleQty").value);
+  if (isNaN(qty) || qty <= 0) {
+    alert("⚠️ Please register a valid product unit quantity.");
+    return;
+  }
+
+  let drink = drinks[idx];
+  sales.push({
+    drink: drink.name,
+    ml: drink.ml,
+    qty: qty,
+    total: qty * drink.price,
+    date: new Date().toDateString()
+  });
+
+  document.getElementById("saleQty").value = "1";
+  saveDataToLocalStorage(); // Auto-save transaction metrics
+  uiRefreshAll();
+}
+
+function updateSalePriceHint() {
+  let idx = document.getElementById("saleDrink").value;
+  let hint = document.getElementById("priceHint");
+  if(idx !== "" && drinks[idx]) {
+    hint.innerText = `@ ${drinks[idx].price} KES`;
+  } else {
+    hint.innerText = "";
+  }
+}
+
+// Dashboard UI Rendering Pipeline
+function uiRefreshAll() {
+  refreshDrinksTable();
+  refreshCashierDropdown();
+  refreshSalesTable();
+  updateFinancialReports();
+}
+
+function refreshDrinksTable() {
+  let table = document.getElementById("drinkTable");
+  table.innerHTML = `<tr>
+    <th>Drink Profile</th>
+    <th>Capacity</th>
+    <th>Sale Unit (KES)</th>
+    <th>Cost Unit (KES)</th>
+    <th>Performance Outlook</th>
+    <th>Actions</th>
+  </tr>`;
+
+  if(drinks.length === 0) {
+    table.innerHTML += `<tr><td colspan="6" style="color:#7f7a9e; font-style:italic;">Inventory is empty. Add profiles above.</td></tr>`;
+    return;
+  }
+
+  drinks.forEach((d, i) => {
+    let status = "";
+    if (d.price < d.buy) {
+      status = "<span style='color:#ff4d4d; font-weight:bold;'>Loss ❌</span>";
+    } else {
+      let profit = d.price - d.buy;
+      status = "<span style='color:#00ff66; font-weight:bold;'>Profit +${profit} KES</span>";
+    }
+   
+    table.innerHTML += `<tr>
+      <td><b style="color:#fff;">${d.name}</b></td>
+      <td>${d.ml} ml</td>
+      <td style="color:#00f0ff;">${d.price}</td>
+      <td>${d.buy}</td>
+      <td>${status}</td>
+      <td>
+        <button class="edit-btn" style="padding: 4px 10px; font-size:12px;" onclick="startEditDrink(${i})">Edit</button>
+        <button class="delete-btn" style="padding: 4px 10px; font-size:12px;" onclick="deleteDrink(${i})">Delete</button>
+      </td>
+    </tr>`;
+  });
+}
+
+function refreshCashierDropdown() {
+  let select = document.getElementById("saleDrink");
+  select.innerHTML = "";
+ 
+  if (drinks.length === 0) {
+    select.innerHTML = "<option value=''>-- No Stock Item Loaded --</option>";
+    updateSalePriceHint();
+    return;
+  }
+
+  drinks.forEach((d, i) => {
+    select.innerHTML += `<option value="${i}">${d.name} (${d.ml} ml)</option>`;
+  });
+  updateSalePriceHint();
+}
+
+function refreshSalesTable() {
+  let table = document.getElementById("salesTable");
+  table.innerHTML = "<tr><th>Product Ledger</th><th>Units Sold</th><th>Gross Value</th></tr>";
+ 
+  let currentDayString = new Date().toDateString();
+  let todaySales = sales.filter(s => s.date === currentDayString);
+  let grand = 0;
+
+  if (todaySales.length === 0) {
+    table.innerHTML += `<tr><td colspan="3" style="color:#7f7a9e; font-style:italic;">No active transactions on record for this shift.</td></tr>`;
+    document.getElementById("grandTotal").innerText = "Grand Total: 0 KES";
+    return;
+  }
+
+  todaySales.forEach(s => {
+    table.innerHTML += `<tr><td>${s.drink} (${s.ml} ml)</td><td>${s.qty}</td><td style="color:#ff007f;">${s.total} KES</td></tr>`;
+    grand += s.total;
+  });
+  document.getElementById("grandTotal").innerText = "Grand Total: " + grand + " KES";
+}
+
+function updateFinancialReports() {
+  let today = new Date().toDateString();
+  let daily = sales.filter(s => s.date === today).reduce((sum, s) => sum + s.total, 0);
+  let weekly = sales.slice(-7).reduce((sum, s) => sum + s.total, 0);
+  let monthly = sales.reduce((sum, s) => sum + s.total, 0);
+ 
+  document.getElementById("reportDaily").innerText = `${daily} KES`;
+  document.getElementById("reportWeekly").innerText = `${weekly} KES`;
+  document.getElementById("reportMonthly").innerText = `${monthly} KES`;
+}
+</script>
+</body>
+</html>
