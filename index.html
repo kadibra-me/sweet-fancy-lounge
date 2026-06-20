@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sweet Fancy Pub - Production Engine</title>
+    <title>Sweet Fancy Pub - Unified Engine</title>
+    <!-- PWA Installation Assets Hook -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <!-- Tailwind CSS for sleek layout styling -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Lucide Icons for clean UI elements -->
@@ -17,21 +23,62 @@
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
 
+    <!-- ========================================== -->
+    <!--     PORTAL FRONT GATEWAY (INITIAL SCREEN)   -->
+    <!-- ========================================== -->
+    <div id="portal-gate" class="fixed inset-0 bg-slate-950 z-[100] flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-8 shadow-2xl space-y-6 text-center">
+            <div class="space-y-2">
+                <div class="mx-auto bg-amber-500 text-slate-950 w-14 h-14 rounded-2xl font-black text-2xl flex items-center justify-center tracking-wider shadow-lg shadow-amber-500/10">SF</div>
+                <h2 class="text-2xl font-black text-white tracking-tight">SWEET FANCY PUB</h2>
+                <p class="text-xs text-slate-400">Select your station workspace role to authenticate</p>
+            </div>
+
+            <!-- Role Selector Buttons -->
+            <div id="role-selection-zone" class="grid grid-cols-2 gap-3">
+                <button onclick="selectPortalRole('staff')" id="role-btn-staff" class="p-4 bg-slate-800 border-2 border-transparent rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group">
+                    <i data-lucide="users" class="text-slate-400 group-hover:text-blue-400 w-6 h-6"></i>
+                    <span class="text-sm font-bold text-slate-200">Bar Staff</span>
+                </button>
+                <button onclick="selectPortalRole('manager')" id="role-btn-manager" class="p-4 bg-slate-800 border-2 border-transparent rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group">
+                    <i data-lucide="shield-check" class="text-slate-400 group-hover:text-amber-400 w-6 h-6"></i>
+                    <span class="text-sm font-bold text-slate-200">Manager</span>
+                </button>
+            </div>
+
+            <!-- Dynamic PIN Field Form -->
+            <div id="portal-pin-zone" class="hidden space-y-4 pt-2 border-t border-slate-800/60 animate-fade-in">
+                <p id="pin-prompt-text" class="text-xs text-slate-400 font-medium">Enter Access Code</p>
+                <input type="password" id="portal-input-pin" maxlength="4" placeholder="••••" class="w-36 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-3xl tracking-widest text-white focus:outline-none focus:border-amber-500 font-mono">
+                <div id="portal-error-text" class="text-xs text-rose-400 hidden font-semibold">Invalid Access PIN. Entry Denied.</div>
+                
+                <div class="flex gap-2">
+                    <button onclick="backToRoleSelection()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-400 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer">Back</button>
+                    <button onclick="verifyPortalLogin()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer">Verify & Enter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!--        MAIN OPERATIONAL SYSTEM INTERFACE    -->
+    <!-- ========================================== -->
     <!-- TOP NAVIGATION BAR -->
     <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex justify-between items-center shrink-0">
         <div class="flex items-center gap-3">
-            <div class="bg-amber-500 text-slate-950 p-2 rounded-lg font-black tracking-wider">SF</div>
+            <div class="bg-amber-500 text-slate-950 p-2 rounded-lg font-black tracking-wider text-sm">SF</div>
             <div>
-                <h1 class="text-xl font-bold tracking-tight">SWEET FANCY PUB</h1>
-                <p class="text-xs text-slate-400">Production POS Station</p>
+                <h1 class="text-lg font-bold tracking-tight">SWEET FANCY PUB</h1>
+                <p id="nav-station-sub" class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">POS Station</p>
             </div>
         </div>
         <div class="flex items-center gap-4">
-            <button onclick="requestManagerAccess()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer">
-                <i data-lucide="lock" class="w-4 h-4 text-amber-400"></i> Manager Panel
+            <button onclick="lockSystemStation()" class="flex items-center gap-1.5 bg-slate-800 hover:bg-rose-950/40 border border-slate-700 hover:border-rose-900/50 px-3 py-1.5 rounded-lg text-xs text-slate-300 hover:text-rose-400 font-medium transition cursor-pointer">
+                <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Lock Station
             </button>
             <div id="sync-badge" class="bg-amber-500/10 border border-amber-500/20 text-amber-400 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Initializing Memory...
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Initializing...
             </div>
         </div>
     </header>
@@ -40,7 +87,7 @@
     <div class="flex flex-1 overflow-hidden">
         
         <!-- LEFT: STOCK GRID & QUICK TAP -->
-        <main class="flex-1 p-6 flex flex-col gap-6 overflow-y-auto custom-scroll">
+        <main id="main-stock-deck" class="flex-1 p-6 flex flex-col gap-6 overflow-y-auto custom-scroll">
             <!-- Quick Tap Section -->
             <div>
                 <h2 class="text-xs font-bold tracking-widest text-slate-400 uppercase mb-3 flex items-center gap-2">
@@ -68,7 +115,7 @@
         </main>
 
         <!-- RIGHT: CASHIER BASKET & RECENT ORDERS -->
-        <aside class="w-96 bg-slate-900 border-l border-slate-800 flex flex-col h-full shrink-0">
+        <aside id="main-billing-deck" class="w-96 bg-slate-900 border-l border-slate-800 flex flex-col h-full shrink-0">
             <!-- Active Basket Header -->
             <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900">
                 <h3 class="font-bold flex items-center gap-2 text-sm text-slate-300">
@@ -102,7 +149,7 @@
 
                 <div class="space-y-2.5">
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Customer Phone (WhatsApp/M-Pesa)</label>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Customer Phone (WhatsApp)</label>
                         <input type="text" id="cust-phone" oninput="cleanPhoneNumber(this)" placeholder="e.g. 0712345678" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:border-slate-500 text-white tracking-wider">
                     </div>
 
@@ -137,86 +184,92 @@
                 </button>
             </div>
         </aside>
-    </div>
 
-    <!-- SECURITY AUTHENTICATION SCREEN (PIN GATEWAY) -->
-    <div id="auth-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[60] flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl text-center space-y-4">
-            <div class="mx-auto bg-amber-500/10 w-12 h-12 rounded-full flex items-center justify-center">
-                <i data-lucide="shield-check" class="text-amber-400 w-6 h-6"></i>
+        <!-- PURE MANAGER ISOLATED CONTROL CORE VIEW -->
+        <main id="isolated-manager-deck" class="hidden flex-1 p-6 overflow-y-auto custom-scroll space-y-6 max-w-2xl mx-auto">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div>
+                    <h2 class="text-xl font-black text-slate-100 flex items-center gap-2">
+                        <i data-lucide="settings" class="text-amber-500"></i> Administrative Control Center
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Secure live backend adjustments and audit configuration logs</p>
+                </div>
             </div>
-            <div>
-                <h3 class="text-lg font-bold text-slate-100">Manager Authorization</h3>
-                <p class="text-xs text-slate-400 mt-1">Enter Secret Shift Security PIN to modify system settings.</p>
+
+            <!-- WhatsApp Dispatch Setting Toggle -->
+            <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+                <h4 class="text-xs font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-2">
+                    <i data-lucide="message-square" class="w-3.5 h-3.5 text-emerald-400"></i> Automated WhatsApp Dispatch
+                </h4>
+                <p class="text-xs text-slate-500 mb-4">Choose whether receipts fire completely automated in the background via third-party webhooks or native browser tabs.</p>
+                <div class="grid grid-cols-2 gap-3 max-w-sm">
+                    <button onclick="setWhatsAppEndpoint('web')" id="wa-web" class="py-2.5 text-xs font-semibold rounded-lg border transition cursor-pointer">Direct Tab Mode</button>
+                    <button onclick="setWhatsAppEndpoint('api')" id="wa-api" class="py-2.5 text-xs font-semibold rounded-lg border transition cursor-pointer">Cloud Webhook Engine</button>
+                </div>
+                <div id="api-hook-config" class="hidden mt-4 space-y-2 animate-fade-in">
+                    <label class="block text-[10px] text-slate-400 uppercase tracking-wider font-mono">Custom API Webhook Gateway URL:</label>
+                    <input type="text" id="wa-webhook-url" placeholder="https://api.whatsapp-gateway.com/send" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-slate-500">
+                </div>
             </div>
-            <input type="password" id="manager-pin" maxlength="4" placeholder="••••" class="w-32 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-2xl tracking-widest text-white focus:outline-none focus:border-amber-500 font-mono">
-            <div id="auth-error" class="text-xs text-rose-400 hidden font-medium">Invalid Master PIN. Entry Denied.</div>
-            <div class="flex gap-2 pt-2">
-                <button onclick="closeAuthModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 rounded-xl text-xs font-semibold transition cursor-pointer">Cancel</button>
-                <button onclick="verifyManagerPin()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 py-2 rounded-xl text-xs font-bold transition cursor-pointer">Unlock Access</button>
+            <!-- SECURE PIN MANAGEMENT ENGINE -->
+<div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4">
+    <h4 class="text-xs font-bold tracking-wider text-slate-400 uppercase flex items-center gap-2">
+        <i data-lucide="key-round" class="w-3.5 h-3.5 text-amber-500"></i> Station Terminal PIN Management
+    </h4>
+    <p class="text-xs text-slate-500">Update system access codes in real-time. Changes sync across all devices instantly.</p>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Change Staff PIN -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wide">New Staff PIN (4 Digits)</label>
+            <div class="flex gap-2">
+                <input type="password" id="new-staff-pin-input" maxlength="4" placeholder="••••" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-center text-sm font-mono focus:outline-none focus:border-blue-500">
+                <button onclick="updateSystemPin('staff')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0">Update</button>
+            </div>
+        </div>
+
+        <!-- Change Manager PIN -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wide">New Manager PIN (4 Digits)</label>
+            <div class="flex gap-2">
+                <input type="password" id="new-manager-pin-input" maxlength="4" placeholder="••••" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-center text-sm font-mono focus:outline-none focus:border-amber-500">
+                <button onclick="updateSystemPin('manager')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0">Update</button>
             </div>
         </div>
     </div>
-
-    <!-- CONFIGURATION OVERLAY (MANAGER PANEL) -->
-    <div id="manager-panel" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[85vh]">
-            <div class="p-4 border-b border-slate-800 flex justify-between items-center">
-                <h3 class="font-bold flex items-center gap-2 text-base text-slate-200">
-                    <i data-lucide="settings" class="text-amber-500"></i> Manager Dashboard Terminal
-                </h3>
-                <button onclick="toggleManagerPanel()" class="text-slate-400 hover:text-white transition cursor-pointer"><i data-lucide="x"></i></button>
-            </div>
-            
-            <div class="p-6 overflow-y-auto custom-scroll space-y-6">
-                <!-- WhatsApp Dispatch Setting Toggle -->
-                <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl">
-                    <h4 class="text-xs font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-2">
-                        <i data-lucide="message-square" class="w-3.5 h-3.5 text-emerald-400"></i> Automated Dispatch Hook
-                    </h4>
-                    <p class="text-xs text-slate-500 mb-3">Choose whether your cashier desk fires background receipts via custom automation server API endpoints or traditional deep-links.</p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="setWhatsAppEndpoint('web')" id="wa-web" class="py-2 text-xs font-semibold rounded-lg border transition cursor-pointer">Direct Tab Mode</button>
-                        <button onclick="setWhatsAppEndpoint('api')" id="wa-api" class="py-2 text-xs font-semibold rounded-lg border transition cursor-pointer">Background Cloud Engine</button>
+</div>
+            <!-- Live Vault / Shift Summary -->
+            <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4">
+                <h4 class="text-xs font-bold tracking-wider text-slate-400 uppercase flex items-center gap-2">
+                    <i data-lucide="vault" class="w-3.5 h-3.5 text-amber-400"></i> Active Shift Ledger Balance Vault
+                </h4>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <span class="text-[10px] text-slate-500 uppercase block tracking-wider font-semibold">M-Pesa Safe Total</span>
+                        <span id="vault-mpesa" class="font-mono text-2xl font-black text-slate-200 mt-1 block">0 KES</span>
                     </div>
-                    <div id="api-hook-config" class="hidden mt-3 space-y-1.5">
-                        <label class="block text-[10px] text-slate-400 uppercase tracking-wider font-mono">Custom API Webhook Gateway URL:</label>
-                        <input type="text" id="wa-webhook-url" placeholder="https://api.whatsapp-gateway.com/send" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-300 focus:outline-none">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <span class="text-[10px] text-slate-500 uppercase block tracking-wider font-semibold">Physical Drawer Cash</span>
+                        <span id="vault-cash" class="font-mono text-2xl font-black text-slate-200 mt-1 block">0 KES</span>
                     </div>
                 </div>
 
-                <!-- Live Vault / Shift Summary -->
-                <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
-                    <h4 class="text-xs font-bold tracking-wider text-slate-400 uppercase flex items-center gap-2">
-                        <i data-lucide="vault" class="w-3.5 h-3.5 text-amber-400"></i> Current Shift Ledger Balance
-                    </h4>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-slate-900 p-3 rounded-lg border border-slate-800/60">
-                            <span class="text-[10px] text-slate-500 uppercase block tracking-wider">M-Pesa Safe</span>
-                            <span id="vault-mpesa" class="font-mono text-lg font-bold text-slate-200">0 KES</span>
-                        </div>
-                        <div class="bg-slate-900 p-3 rounded-lg border border-slate-800/60">
-                            <span class="text-[10px] text-slate-500 uppercase block tracking-wider">Drawer Cash</span>
-                            <span id="vault-cash" class="font-mono text-lg font-bold text-slate-200">0 KES</span>
-                        </div>
-                    </div>
-                    <!-- Double Locked Shift Wipe Control -->
-                    <div class="pt-2 border-t border-slate-800/60 space-y-2">
-                        <label class="block text-[11px] text-rose-400 font-medium">To finalize sales logging and completely zero-out the active shift record, type <span class="bg-rose-950 px-1 py-0.5 rounded text-white font-mono font-bold tracking-wider">RESET</span> below:</label>
-                        <div class="flex gap-2">
-                            <input type="text" id="reset-lock-input" placeholder="Verification string required" class="flex-1 bg-slate-900 border border-rose-900/40 rounded-lg px-3 py-1.5 text-xs text-rose-200 font-mono focus:outline-none focus:border-rose-500">
-                            <button onclick="executeShiftReset()" class="bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs px-4 py-1.5 rounded-lg transition cursor-pointer flex items-center gap-1">
-                                <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> Wipe Shift
-                            </button>
-                        </div>
+                <!-- Double Locked Shift Wipe Control -->
+                <div class="pt-4 border-t border-slate-800/80 space-y-3">
+                    <label class="block text-xs text-rose-400 font-medium leading-relaxed">To clear transaction tables, archive metrics, and completely zero out the active drawer ledger for a new shift, verify by typing <span class="bg-rose-950/80 border border-rose-900 px-1.5 py-0.5 rounded text-white font-mono font-bold tracking-wider text-[11px]">RESET</span> below:</label>
+                    <div class="flex gap-2 max-w-md">
+                        <input type="text" id="reset-lock-input" placeholder="Verification string required" class="flex-1 bg-slate-950 border border-rose-900/40 rounded-lg px-3 py-2 text-xs text-rose-200 font-mono focus:outline-none focus:border-rose-500">
+                        <button onclick="executeShiftReset()" class="bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs px-5 py-2 rounded-lg transition cursor-pointer flex items-center gap-1.5 shrink-0">
+                            <i data-lucide="shield-alert" class="w-4 h-4"></i> Zero Ledger
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <!-- CLIENT TRANSACTION INVOICE POPUP MODAL -->
-    <div id="receipt-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div id="receipt-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
         <div class="bg-white text-slate-950 w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-4 font-mono text-xs relative">
             <div class="text-center space-y-1">
                 <h3 class="text-base font-black tracking-wider">✨ SWEET FANCY PUB ✨</h3>
@@ -256,7 +309,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!--  FIREBASE & SYSTEM REPLACEMENT LOGIC DOCK  -->
+    <!--  FIREBASE & SYSTEM STORAGE PIPELINE DOCK   -->
     <!-- ========================================== -->
     <script type="importmap">
       {
@@ -271,10 +324,8 @@
         import { initializeApp } from "firebase/app";
         import { getFirestore, doc, collection, getDocs, updateDoc, addDoc, setDoc, onSnapshot, query, orderBy, limit } from "firebase/firestore";
 
-        // -------------------------------------------------------------
-        // 🔧 REPLACE THIS OBJECT WITH YOUR ACTUAL FIREBASE CONFIG KEYS
-        // -------------------------------------------------------------
-        const firebaseConfig ={
+        // 🔧 REPLACE THIS CONFIG OBJECT WITH YOUR FIREBASE ACCOUNT DETAILS
+        const firebaseConfig = {
   apiKey: "AIzaSyBnddPDgZFAX9-m5kUBp6tnWeS9_8uafq0",
   authDomain: "sweet-fancy-pub.firebaseapp.com",
   projectId: "sweet-fancy-pub",
@@ -284,16 +335,19 @@
   measurementId: "G-8DXKBZ08RY"
 };
 
-        // Fallback flag check if user has not loaded keys yet
         const isFirebaseSetupPlaceholder = firebaseConfig.apiKey.includes("YOUR_");
 
         let db = null;
         let isCloudConnected = false;
 
-        // Master Security Settings
-        const MASTER_MANAGER_PIN = "2540"; // Update to your preferred manager access pin code
+        // 🔐 Security Credentials Memory State Stores
+        let SECURITY_PINS = {
+            staff: "1234",     // Fallback Sandbox Staff Pin
+            manager: "2540"   // Fallback Sandbox Manager Pin
+        };
+        let activeSelectedRole = null;
 
-        // Initial Local State Data Array (Acts as fallback memory if cloud database is configured to placeholder keys)
+        // Stock and UI Management States
         let stock = [
             { id: '1', name: 'Tusker Cider', category: 'Beers', price: 300, stock: 48, pinned: true },
             { id: '2', name: 'Guinness Smooth', category: 'Beers', price: 350, stock: 36, pinned: true },
@@ -312,19 +366,49 @@
         let shiftVault = { mpesa: 0, cash: 0 };
         let currentCompletedInvoice = null;
 
-        // Boot and startup script setup hooks
         window.addEventListener('DOMContentLoaded', () => {
             initSystemStorage();
             setupUIGlobals();
         });
 
+        async function updateSystemPin(role) {
+    const inputId = role === 'staff' ? 'new-staff-pin-input' : 'new-manager-pin-input';
+    const newPin = document.getElementById(inputId).value.trim();
+
+    // Validation Check
+    if (newPin.length !== 4 || isNaN(newPin)) {
+        alert("Validation Failed: PIN must be exactly 4 numeric characters.");
+        return;
+    }
+
+    if (isCloudConnected) {
+        try {
+            const configRef = doc(db, "security", "config");
+            if (role === 'staff') {
+                await updateDoc(configRef, { staff_pin: newPin });
+            } else {
+                await updateDoc(configRef, { manager_pin: newPin });
+            }
+            alert(Success: Cloud synced. New ${role} PIN activated!);
+        } catch (err) {
+            console.error("Cloud PIN Sync Failed:", err);
+            alert("Database Error: Failed to push new PIN to cloud.");
+        }
+    } else {
+        // Fallback Local Sandbox Memory Update
+        SECURITY_PINS[role] = newPin;
+        alert(Sandbox Mode: Local ${role} PIN updated to ${newPin});
+    }
+
+    document.getElementById(inputId).value = '';
+}
+
         async function initSystemStorage() {
             const badge = document.getElementById('sync-badge');
             
             if (isFirebaseSetupPlaceholder) {
-                console.warn("Firebase Running in Sandbox / Simulation mode: Local memory engine active.");
                 badge.className = "bg-blue-500/10 border border-blue-500/20 text-blue-400 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2";
-                badge.innerHTML = <span class="w-2 h-2 rounded-full bg-blue-400"></span> Offline Sandbox Deck;
+                badge.innerHTML = <span class="w-2 h-2 rounded-full bg-blue-400"></span> Sandbox Sandbox Mode;
                 isCloudConnected = false;
                 renderStock();
                 renderRecentTransactions();
@@ -338,6 +422,19 @@
                 
                 badge.className = "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2";
                 badge.innerHTML = <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Cloud Stream Connected;
+
+                // 🔐 Real-Time Cloud Authentication Stream Hook
+                // Looks inside collection "security", document "config" for fields: staff_pin and manager_pin
+                onSnapshot(doc(db, "security", "config"), (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        if (data.staff_pin) SECURITY_PINS.staff = data.staff_pin;
+                        if (data.manager_pin) SECURITY_PINS.manager = data.manager_pin;
+                    } else {
+                        // Creates base security schema default records if they don't exist yet
+                        setDoc(doc(db, "security", "config"), { staff_pin: "1234", manager_pin: "2540" });
+                    }
+                });
 
                 // Live Streaming Cloud Stock Sync Listener Hook
                 onSnapshot(collection(db, "stock"), (snapshot) => {
@@ -356,8 +453,6 @@
                     if (docSnap.exists()) {
                         shiftVault = docSnap.data();
                         syncVaultLabels();
-                    } else {
-                        setDoc(doc(db, "vault", "current_shift"), { mpesa: 0, cash: 0 });
                     }
                 });
 
@@ -372,15 +467,18 @@
                 });
 
             } catch (err) {
-                console.error("Firebase Database Hook Failure. Falling back to local arrays:", err);
-                badge.className = "bg-rose-500/10 border border-rose-500/20 text-rose-400 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2";
-                badge.innerHTML = <span class="w-2 h-2 rounded-full bg-rose-400"></span> Error: Storage Unreachable;
+                console.error("Firebase Initialization Failure:", err);
                 isCloudConnected = false;
                 renderStock();
             }
         }
 
         function setupUIGlobals() {
+            window.updateSystemPin = updateSystemPin;
+            window.selectPortalRole = selectPortalRole;
+            window.backToRoleSelection = backToRoleSelection;
+            window.verifyPortalLogin = verifyPortalLogin;
+            window.lockSystemStation = lockSystemStation;
             window.addToBasket = addToBasket;
             window.stepBasketQty = stepBasketQty;
             window.clearBasket = clearBasket;
@@ -390,12 +488,8 @@
             window.recallPastInvoice = recallPastInvoice;
             window.closeReceiptModal = closeReceiptModal;
             window.dispatchWhatsAppReceipt = dispatchWhatsAppReceipt;
-            window.toggleManagerPanel = toggleManagerPanel;
             window.setWhatsAppEndpoint = setWhatsAppEndpoint;
             window.executeShiftReset = executeShiftReset;
-            window.requestManagerAccess = requestManagerAccess;
-            window.verifyManagerPin = verifyManagerPin;
-            window.closeAuthModal = closeAuthModal;
             window.renderStock = renderStock;
             window.cleanPhoneNumber = cleanPhoneNumber;
 
@@ -404,40 +498,90 @@
             lucide.createIcons();
         }
 
-        // -------------------------------------------------------------
-        // 🔐 SECURITY AUTHENTICATION INTERFACE MANAGER
-        // -------------------------------------------------------------
-        function requestManagerAccess() {
-            document.getElementById('manager-pin').value = '';
-            document.getElementById('auth-error').classList.add('hidden');
-            document.getElementById('auth-modal').classList.remove('hidden');
-            document.getElementById('manager-pin').focus();
+        // ==========================================
+        //  🔐 AUTHENTICATION PORTAL CORE CONTROL LOGIC
+        // ==========================================
+        function selectPortalRole(role) {
+            activeSelectedRole = role;
+            
+            // Highlight select cards visually
+            document.getElementById('role-btn-staff').className = p-4 bg-slate-800 border-2 ${role === 'staff' ? 'border-blue-500 bg-slate-800/80' : 'border-transparent'} rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group;
+            document.getElementById('role-btn-manager').className = p-4 bg-slate-800 border-2 ${role === 'manager' ? 'border-amber-500 bg-slate-800/80' : 'border-transparent'} rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group;
+
+            // Display PIN card entry block
+            document.getElementById('pin-prompt-text').textContent = Enter ${role === 'manager' ? 'Manager Secret PIN' : 'Staff Station Key'};
+            document.getElementById('portal-input-pin').value = '';
+            document.getElementById('portal-error-text').classList.add('hidden');
+            document.getElementById('portal-pin-zone').classList.remove('hidden');
+            document.getElementById('portal-input-pin').focus();
         }
 
-        function verifyManagerPin() {
-            const enteredPin = document.getElementById('manager-pin').value;
-            if (enteredPin === MASTER_MANAGER_PIN) {
-                document.getElementById('auth-modal').classList.add('hidden');
-                document.getElementById('manager-panel').classList.remove('hidden');
-                syncVaultLabels();
+        function backToRoleSelection() {
+            activeSelectedRole = null;
+            document.getElementById('role-btn-staff').className = "p-4 bg-slate-800 border-2 border-transparent rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group";
+            document.getElementById('role-btn-manager').className = "p-4 bg-slate-800 border-2 border-transparent rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group";
+            document.getElementById('portal-pin-zone').classList.add('hidden');
+        }
+
+        function verifyPortalLogin() {
+            const typedPin = document.getElementById('portal-input-pin').value;
+            const targetCorrectPin = SECURITY_PINS[activeSelectedRole];
+
+            if (typedPin === targetCorrectPin) {
+                // Pin Validated! Grant access entryway
+                document.getElementById('portal-gate').classList.add('hidden');
+                
+                const navSub = document.getElementById('nav-station-sub');
+                const stockDeck = document.getElementById('main-stock-deck');
+                const billingDeck = document.getElementById('main-billing-deck');
+                const managerDeck = document.getElementById('isolated-manager-deck');
+
+                if (activeSelectedRole === 'manager') {
+                    navSub.textContent = "Admin Manager Dashboard";
+                    navSub.className = "text-[10px] text-amber-400 uppercase tracking-widest font-bold";
+                    
+                    // Hide POS layout, show dedicated administrative view
+                    stockDeck.classList.add('hidden');
+                    billingDeck.classList.add('hidden');
+                    managerDeck.classList.remove('hidden');
+                    syncVaultLabels();
+                } else {
+                    navSub.textContent = "Active Cashier Shift";
+                    navSub.className = "text-[10px] text-blue-400 uppercase tracking-widest font-bold";
+                    
+                    // Show standard high-speed cashier billing interface
+                    managerDeck.classList.add('hidden');
+                    stockDeck.classList.remove('hidden');
+                    billingDeck.classList.remove('hidden');
+                    renderStock();
+                }
             } else {
-                const errLabel = document.getElementById('auth-error');
-                errLabel.classList.remove('hidden');
-                errLabel.classList.add('animate-shake');
-                setTimeout(() => errLabel.classList.remove('animate-shake'), 300);
+                const err = document.getElementById('portal-error-text');
+                err.classList.remove('hidden');
+                document.getElementById('portal-input-pin').value = '';
+                document.getElementById('portal-input-pin').focus();
             }
         }
 
-        function closeAuthModal() {
-            document.getElementById('auth-modal').classList.add('hidden');
+        function lockSystemStation() {
+            // Instantly clear transient session variables and bounce out to front gate authentication portal
+            clearBasket();
+            activeSelectedRole = null;
+            document.getElementById('portal-input-pin').value = '';
+            document.getElementById('role-btn-staff').className = "p-4 bg-slate-800 border-2 border-transparent rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group";
+            document.getElementById('role-btn-manager').className = "p-4 bg-slate-800 border-2 border-transparent rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group";
+            document.getElementById('portal-pin-zone').classList.add('hidden');
+            document.getElementById('portal-gate').classList.remove('hidden');
         }
 
-        // -------------------------------------------------------------
-        // UI CORE FUNCTIONAL SYSTEM CONTROLLERS
-        // -------------------------------------------------------------
+        // ==========================================
+        //         UI OPERATIONAL TERMINAL ENGINES
+        // ==========================================
         function renderStock() {
             const stockGrid = document.getElementById('stock-grid');
             const quickGrid = document.getElementById('quick-tap-grid');
+            if(!stockGrid || !quickGrid) return; // Protect layout if manager view is active
+            
             const queryVal = document.getElementById('search-bar').value.toLowerCase();
             
             stockGrid.innerHTML = '';
@@ -485,7 +629,7 @@
             const product = stock.find(p => p.id === id);
             if (!product) return;
             if (product.stock <= 0) {
-                alert(Operation Halt: ${product.name} reservoir is completely out!);
+                alert(Operation Halt: ${product.name} stock has run out!);
                 return;
             }
             if (basket[id]) {
@@ -518,9 +662,10 @@
         function updateBasketUI() {
             const container = document.getElementById('basket-container');
             const totalLabel = document.getElementById('basket-total');
-            container.innerHTML = '';
+            if(!container || !totalLabel) return;
             
             let accumulatedTotal = 0;
+            container.innerHTML = '';
 
             Object.keys(basket).forEach(id => {
                 const item = basket[id];
@@ -549,7 +694,7 @@
                 container.innerHTML = `
                     <div class="h-full flex flex-col items-center justify-center text-slate-600 gap-2 p-6 text-center m-auto">
                         <i data-lucide="smile" class="w-8 h-8 stroke-[1.5]"></i>
-                        <p class="text-xs">Bar basket empty. Tap items to pile up a bill balance.</p>
+                        <p class="text-xs">Bar basket empty. Tap items to create a bill.</p>
                     </div>
                 `;
             }
@@ -589,7 +734,9 @@
         }
 
         function calculateCashChange() {
-            const numericTotal = parseInt(document.getElementById('basket-total').textContent) || 0;
+            const totalBox = document.getElementById('basket-total');
+            if(!totalBox) return;
+            const numericTotal = parseInt(totalBox.textContent) || 0;
             const numericTendered = parseInt(document.getElementById('cash-tendered').value) || 0;
             const balanceLabel = document.getElementById('cash-change-due');
 
@@ -602,12 +749,9 @@
             }
         }
 
-        // -------------------------------------------------------------
-        // TRANSACTION WRITE & CLOUD DB PIPELINE SYNC
-        // -------------------------------------------------------------
         async function executeCheckout() {
             if (Object.keys(basket).length === 0) {
-                alert("Transaction Blocked: No items staged inside active basket.");
+                alert("Transaction Blocked: No items inside active basket.");
                 return;
             }
 
@@ -620,7 +764,6 @@
 
             const basketTotalAmt = parseInt(document.getElementById('basket-total').textContent) || 0;
 
-            // Prepare Transaction Payload
             const txData = {
                 id: 'TXN-' + Math.floor(1000 + Math.random() * 9000),
                 timestamp: new Date().toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
@@ -635,21 +778,16 @@
 
             if (isCloudConnected) {
                 try {
-                    // 1. Log order transaction documentation payload
                     await addDoc(collection(db, "transactions"), txData);
 
-                    // 2. Compute live stock deduction counts inside cloud database
                     for (let id of Object.keys(basket)) {
                         const targetItemRef = doc(db, "stock", id);
                         const localObj = stock.find(p => p.id === id);
                         if (localObj) {
-                            await updateDoc(targetItemRef, {
-                                stock: localObj.stock - basket[id].qty
-                            });
+                            await updateDoc(targetItemRef, { stock: localObj.stock - basket[id].qty });
                         }
                     }
 
-                    // 3. Update active cloud financial balance registers
                     const vaultRef = doc(db, "vault", "current_shift");
                     if (activePaymentMethod === 'mpesa') {
                         await updateDoc(vaultRef, { mpesa: shiftVault.mpesa + basketTotalAmt });
@@ -658,11 +796,9 @@
                     }
 
                 } catch (err) {
-                    console.error("Cloud Transaction pipeline aborted mid-execution:", err);
-                    alert("Sync Error: Failed writing processing data downstream. Swapping to backup local mode.");
+                    console.error("Cloud Write Aborted:", err);
                 }
             } else {
-                // Fallback Local sandbox execution simulation logic blocks
                 Object.keys(basket).forEach(id => {
                     const stockRecord = stock.find(p => p.id === id);
                     if (stockRecord) stockRecord.stock -= basket[id].qty;
@@ -691,16 +827,13 @@
         function renderRecentTransactions() {
             const container = document.getElementById('recent-transactions-container');
             const counter = document.getElementById('activity-counter');
-            container.innerHTML = '';
+            if(!container) return;
             
+            container.innerHTML = '';
             counter.textContent = ${pastTransactions.length} paid;
 
             if (pastTransactions.length === 0) {
-                container.innerHTML = `
-                    <div class="h-full flex flex-col items-center justify-center text-slate-700 p-4 text-center m-auto">
-                        <p class="text-[11px]">No transactions completed yet this shift.</p>
-                    </div>
-                `;
+                container.innerHTML = <div class="h-full flex flex-col items-center justify-center text-slate-700 p-4 text-center m-auto"><p class="text-[11px]">No sales yet this shift.</p></div>;
                 return;
             }
 
@@ -717,7 +850,6 @@
                                 <span class="text-[9px] px-1 rounded font-bold uppercase tracking-wide ${isMpesa ? 'bg-blue-950 text-blue-400 border border-blue-900/50' : 'bg-emerald-950 text-emerald-400 border border-emerald-900/50'}">${txn.paymentMode}</span>
                             </div>
                             <p class="text-[11px] text-slate-300 truncate font-medium">${itemSummary}</p>
-                            <p class="text-[10px] text-slate-500 font-mono mt-0.5">Rec: ${txn.phone}</p>
                         </div>
                         <div class="flex flex-col items-end gap-1.5 shrink-0">
                             <span class="font-mono text-xs font-bold text-slate-200">${txn.total} KES</span>
@@ -765,9 +897,9 @@
             currentCompletedInvoice = null;
         }
 
-        // -------------------------------------------------------------
-        // WHATSAPP FREE WEBHOOK HOOK DISPATCH SYSTEM ENGINE
-        // -------------------------------------------------------------
+        // ==========================================
+        //         WHATSAPP ENGINE DISPATCH HOOKS
+        // ==========================================
         async function dispatchWhatsAppReceipt() {
             if (!currentCompletedInvoice) return;
 
@@ -787,20 +919,18 @@
             message += *Total Paid: ${currentCompletedInvoice.total} KES* via ${currentCompletedInvoice.paymentMode.toUpperCase()}\n\n;
             message += _Enjoy your night and vibe responsibly!_ 🍾🔥;
 
-            // Operational strategy route branch
             if (configWhatsAppMode === 'api') {
                 const webhookUrl = document.getElementById('wa-webhook-url').value.trim();
                 if(!webhookUrl) {
-                    alert("Configuration Error: Cloud automation webhook endpoint input string missing.");
+                    alert("Configuration Error: Cloud URL endpoint string missing.");
                     return;
                 }
 
                 btn.disabled = true;
-                btn.innerHTML = <span class="animate-pulse">Firing Cloud Hook Payload...</span>;
+                btn.innerHTML = <span class="animate-pulse">Firing Cloud Hook...</span>;
 
                 try {
-                    // Fires real-time backend background dispatch using standard free json webhook endpoints
-                    const response = await fetch(webhookUrl, {
+                    await fetch(webhookUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -809,12 +939,9 @@
                             txnId: currentCompletedInvoice.id
                         })
                     });
-
-                    alert("Cloud Hook Fired Successfully! System processing receipt.");
+                    alert("Cloud Hook Fired Successfully!");
                 } catch(e) {
-                    console.error("Cloud automation gateway network failure:", e);
-                    alert("Network Error: Cloud worker webhook failed. Reverting safely to device tab deep link.");
-                    // Graceful fallback to deep link if server is down
+                    alert("Network Error: Webhook failed. Reverting to browser tab dispatch.");
                     openWhatsAppDeepLink(currentCompletedInvoice.phone, message);
                 } finally {
                     btn.disabled = false;
@@ -828,13 +955,7 @@
 
         function openWhatsAppDeepLink(phone, message) {
             const encodedMessage = encodeURIComponent(message);
-            let targetURL = https://web.whatsapp.com/send?phone=${phone}&text=${encodedMessage};
-            window.open(targetURL, '_blank');
-        }
-
-        function toggleManagerPanel() {
-            const panel = document.getElementById('manager-panel');
-            panel.classList.toggle('hidden');
+            window.open(https://web.whatsapp.com/send?phone=${phone}&text=${encodedMessage}, '_blank');
         }
 
         function setWhatsAppEndpoint(mode) {
@@ -855,26 +976,25 @@
         }
 
         function syncVaultLabels() {
-            document.getElementById('vault-mpesa').textContent = ${shiftVault.mpesa} KES;
-            document.getElementById('vault-cash').textContent = ${shiftVault.cash} KES;
+            const mLabel = document.getElementById('vault-mpesa');
+            const cLabel = document.getElementById('vault-cash');
+            if(mLabel && cLabel) {
+                mLabel.textContent = ${shiftVault.mpesa} KES;
+                cLabel.textContent = ${shiftVault.cash} KES;
+            }
         }
 
         async function executeShiftReset() {
             const inputField = document.getElementById('reset-lock-input');
             if (inputField.value.trim() !== 'RESET') {
-                alert("Access Denied: Safety verification token mismatch. Reset aborted.");
+                alert("Verification token mismatch. Reset aborted.");
                 return;
             }
 
             if (isCloudConnected) {
                 try {
                     await setDoc(doc(db, "vault", "current_shift"), { mpesa: 0, cash: 0 });
-                    // Wipe recent operations logs completely off Firestore database logs collection records
-                    const snapshot = await getDocs(collection(db, "transactions"));
-                    // NOTE: In production cleanouts you may choose to parse batch deletes here.
-                } catch(e) {
-                    console.error("Failed clearing data references on remote server:", e);
-                }
+                } catch(e) { console.error(e); }
             } else {
                 shiftVault.mpesa = 0;
                 shiftVault.cash = 0;
@@ -884,8 +1004,8 @@
             }
 
             inputField.value = '';
-            alert("Success: active shift ledger and activity records zeroed out.");
-            toggleManagerPanel();
+            alert("Success: Shift ledgers zeroed out.");
+            lockSystemStation();
         }
     </script>
 </body>
