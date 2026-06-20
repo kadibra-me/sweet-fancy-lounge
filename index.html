@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sweet Fancy Pub - Unified POS</title>
+    <title>Sweet Fancy Pub - Advanced POS</title>
     
+    <!-- PWA Installation Assets Hook -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
+    <!-- Stable Production CDN Script Assets -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
     
@@ -22,6 +24,9 @@
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
 
+    <!-- ========================================== -->
+    <!--     PORTAL FRONT GATEWAY (INITIAL SCREEN)   -->
+    <!-- ========================================== -->
     <div id="portal-gate" class="fixed inset-0 bg-slate-950 z-[100] flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-8 shadow-2xl space-y-6 text-center">
             <div class="space-y-2">
@@ -30,6 +35,7 @@
                 <p class="text-xs text-slate-400">Select your station workspace role to authenticate</p>
             </div>
 
+            <!-- Role Selector Buttons -->
             <div id="role-selection-zone" class="grid grid-cols-2 gap-3">
                 <button onclick="selectPortalRole('staff')" id="role-btn-staff" class="p-4 bg-slate-800 border-2 border-transparent rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group">
                     <i data-lucide="users" class="text-slate-400 group-hover:text-blue-400 w-6 h-6"></i>
@@ -41,6 +47,7 @@
                 </button>
             </div>
 
+            <!-- Dynamic PIN Field Form -->
             <div id="portal-pin-zone" class="hidden space-y-4 pt-2 border-t border-slate-800/60">
                 <p id="pin-prompt-text" class="text-xs text-slate-400 font-medium">Enter Access Code</p>
                 <input type="password" id="portal-input-pin" maxlength="4" placeholder="••••" class="w-36 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-3xl tracking-widest text-white focus:outline-none focus:border-amber-500 font-mono">
@@ -55,6 +62,10 @@
     </div>
 
 
+    <!-- ========================================== -->
+    <!--        MAIN OPERATIONAL SYSTEM INTERFACE    -->
+    <!-- ========================================== -->
+    <!-- TOP NAVIGATION BAR -->
     <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex justify-between items-center shrink-0">
         <div class="flex items-center gap-3">
             <div class="bg-amber-500 text-slate-950 p-2 rounded-lg font-black tracking-wider text-sm">SF</div>
@@ -73,32 +84,40 @@
         </div>
     </header>
 
+    <!-- MAIN BODY DIVISION -->
     <div class="flex flex-1 overflow-hidden">
         
+        <!-- LEFT: CASHIER DECK STOCK GRID & QUICK TAP -->
         <main id="main-stock-deck" class="flex-1 p-6 flex flex-col gap-6 overflow-y-auto custom-scroll">
+            <!-- Quick Tap Section -->
             <div>
                 <h2 class="text-xs font-bold tracking-widest text-slate-400 uppercase mb-3 flex items-center gap-2">
                     <i data-lucide="zap" class="w-4 h-4 text-amber-400 fill-amber-400"></i> Speed Deck (Pinned Items)
                 </h2>
                 <div id="quick-tap-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    </div>
+                    <!-- Dynamic pins inject here -->
+                </div>
             </div>
 
             <hr class="border-slate-800">
 
+            <!-- Full Catalog Section -->
             <div class="flex-1">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xs font-bold tracking-widest text-slate-400 uppercase flex items-center gap-2">
                         <i data-lucide="layers" class="w-4 h-4 text-blue-400"></i> Full Bar Stock
                     </h2>
-                    <input type="text" id="search-bar" oninput="renderStock()" placeholder="Quick filter stock..." class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-slate-500 w-48">
+                    <input type="text" id="search-bar" oninput="renderStock()" placeholder="Quick filter stock..." class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-slate-500 w-48 text-slate-200">
                 </div>
                 <div id="stock-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    </div>
+                    <!-- Catalog injects here -->
+                </div>
             </div>
         </main>
 
+        <!-- RIGHT: CASHIER BASKET & RECENT ORDERS -->
         <aside id="main-billing-deck" class="w-96 bg-slate-900 border-l border-slate-800 flex flex-col h-full shrink-0">
+            <!-- Active Basket Header -->
             <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900">
                 <h3 class="font-bold flex items-center gap-2 text-sm text-slate-300">
                     <i data-lucide="shopping-cart" class="w-4 h-4"></i> Current Bill
@@ -106,9 +125,12 @@
                 <button onclick="clearBasket()" class="text-xs text-slate-500 hover:text-rose-400 transition cursor-pointer">Clear Basket</button>
             </div>
 
+            <!-- Basket Items List -->
             <div id="basket-container" class="h-1/2 overflow-y-auto p-4 flex flex-col gap-3 custom-scroll border-b border-slate-800/60">
-                </div>
+                <!-- Basket items inject here -->
+            </div>
 
+            <!-- Recent Transactions History Log -->
             <div class="p-3 bg-slate-900/40 border-b border-slate-800 flex items-center gap-2 justify-between">
                 <h4 class="text-[11px] font-bold tracking-wider text-slate-400 uppercase flex items-center gap-1.5">
                     <i data-lucide="history" class="w-3.5 h-3.5 text-slate-500"></i> Recent Shift Activity
@@ -116,8 +138,10 @@
                 <span id="activity-counter" class="text-[10px] font-mono bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">0 paid</span>
             </div>
             <div id="recent-transactions-container" class="flex-1 overflow-y-auto p-3 flex flex-col gap-2 custom-scroll bg-slate-950/30">
-                </div>
+                <!-- Executed logs inject here dynamically -->
+            </div>
 
+            <!-- Totals & Payment Control Area -->
             <div class="p-4 bg-slate-950 border-t border-slate-800 flex flex-col gap-4">
                 <div class="flex justify-between items-center">
                     <span class="text-sm font-medium text-slate-400">Total Amount:</span>
@@ -142,6 +166,7 @@
                         </div>
                     </div>
 
+                    <!-- Dynamic Change Calculator -->
                     <div id="change-calculator-deck" class="hidden bg-slate-900 border border-slate-800 p-3 rounded-lg space-y-2">
                         <div class="flex justify-between items-center">
                             <label class="text-xs text-slate-400">Amount Given:</label>
@@ -154,90 +179,231 @@
                     </div>
                 </div>
 
+                <!-- Primary Action Button -->
                 <button onclick="executeCheckout()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 px-4 rounded-xl shadow-lg transition tracking-wide text-sm flex items-center justify-center gap-2 cursor-pointer">
                     <i data-lucide="check-circle"></i> Complete Order & Cloud Sync
                 </button>
             </div>
         </aside>
 
-        <main id="isolated-manager-deck" class="hidden flex-1 p-6 overflow-y-auto custom-scroll space-y-6 max-w-2xl mx-auto">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+        <!-- ========================================== -->
+        <!--    👑 ADVANCED ISOLATED MANAGER INTERFACE  -->
+        <!-- ========================================== -->
+        <main id="isolated-manager-deck" class="hidden flex-1 p-6 overflow-y-auto custom-scroll space-y-6">
+            
+            <!-- MASTER HUB NAVIGATION BAR -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 gap-4">
                 <div>
                     <h2 class="text-xl font-black text-slate-100 flex items-center gap-2">
-                        <i data-lucide="settings" class="text-amber-500"></i> Administrative Control Center
+                        <i data-lucide="sliders" class="text-amber-500"></i> Admin Control Hub
                     </h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Secure live backend adjustments and audit configuration logs</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Secure live backend workspace orchestration and business metrics</p>
+                </div>
+                <!-- Sub Section Tab Controls -->
+                <div class="flex bg-slate-950 border border-slate-800 p-1 rounded-xl w-full sm:w-auto">
+                    <button onclick="switchManagerTab('inventory')" id="tab-btn-inventory" class="flex-1 sm:flex-none py-2 px-4 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i data-lucide="package" class="w-3.5 h-3.5"></i> Inventory
+                    </button>
+                    <button onclick="switchManagerTab('reports')" id="tab-btn-reports" class="flex-1 sm:flex-none py-2 px-4 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i> Reports
+                    </button>
+                    <button onclick="switchManagerTab('security')" id="tab-btn-security" class="flex-1 sm:flex-none py-2 px-4 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i data-lucide="shield" class="w-3.5 h-3.5"></i> Security
+                    </button>
                 </div>
             </div>
 
-            <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4">
-                <h4 class="text-xs font-bold tracking-wider text-slate-400 uppercase flex items-center gap-2">
-                    <i data-lucide="key-round" class="w-3.5 h-3.5 text-amber-500"></i> Station Terminal PIN Management
-                </h4>
-                <p class="text-xs text-slate-500">Update system access codes in real-time. Changes sync across all devices instantly.</p>
-                
+            <!-- TAB 1: DYNAMIC INVENTORY HUB -->
+            <div id="manager-tab-inventory" class="space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Add Stock Form -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4 h-fit">
+                        <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                            <i data-lucide="plus-circle" class="text-blue-400 w-4 h-4"></i> Provision New Stock
+                        </h3>
+                        <div class="space-y-3 text-xs">
+                            <div>
+                                <label class="block text-slate-400 mb-1 font-medium">Item Name</label>
+                                <input type="text" id="inv-name" placeholder="e.g. White Cap Crisp" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1 font-medium">Category</label>
+                                <select id="inv-category" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                                    <option value="Beers">Beers</option>
+                                    <option value="Spirits">Spirits</option>
+                                    <option value="Soft Drinks">Soft Drinks</option>
+                                    <option value="Vibe Deck">Vibe Deck / Shisha</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-slate-400 mb-1 font-medium">Unit Price (KES)</label>
+                                    <input type="number" id="inv-price" placeholder="300" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 font-mono">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 mb-1 font-medium">Initial Stock</label>
+                                    <input type="number" id="inv-stock" placeholder="60" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 font-mono">
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 py-1">
+                                <input type="checkbox" id="inv-pinned" class="w-4 h-4 rounded accent-amber-500 bg-slate-950 border-slate-700">
+                                <label for="inv-pinned" class="text-slate-300 font-medium select-none">Pin to Cashier Speed Deck</label>
+                            </div>
+                            <button onclick="submitStockItem()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl transition mt-2 cursor-pointer flex items-center justify-center gap-1.5 text-sm">
+                                <i data-lucide="check-square" class="w-4 h-4"></i> Push Item Into Stock
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Live Inventory Audit List -->
+                    <div class="lg:grid-cols-1 lg:col-span-2 bg-slate-900 border border-slate-800 p-5 rounded-xl flex flex-col h-[500px]">
+                        <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <i data-lucide="database" class="text-amber-500 w-4 h-4"></i> Live Vault Stock Ledger
+                        </h3>
+                        <div class="flex-1 overflow-y-auto custom-scroll border border-slate-800 rounded-xl bg-slate-950">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-slate-900/80 text-slate-400 border-b border-slate-800 font-medium">
+                                        <th class="p-3">Item Details</th>
+                                        <th class="p-3">Category</th>
+                                        <th class="p-3">Price</th>
+                                        <th class="p-3">Current Qty</th>
+                                        <th class="p-3 text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="manager-stock-rows">
+                                    <!-- Dynamic Inventory Injects Here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: ADVANCED ANALYTICS FINANCIAL CHRONOS REPORTS -->
+            <div id="manager-tab-reports" class="hidden space-y-6">
+                <!-- Live Vault Status Header Summary -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wide">New Staff PIN (4 Digits)</label>
-                        <div class="flex gap-2">
-                            <input type="password" id="new-staff-pin-input" maxlength="4" placeholder="••••" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-center text-sm font-mono focus:outline-none focus:border-blue-500 text-white tracking-widest">
-                            <button onclick="updateSystemPin('staff')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0">Update</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wide">New Manager PIN (4 Digits)</label>
-                        <div class="flex gap-2">
-                            <input type="password" id="new-manager-pin-input" maxlength="4" placeholder="••••" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-center text-sm font-mono focus:outline-none focus:border-amber-500 text-white tracking-widest">
-                            <button onclick="updateSystemPin('manager')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0">Update</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                <h4 class="text-xs font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-2">
-                    <i data-lucide="message-square" class="w-3.5 h-3.5 text-emerald-400"></i> Automated WhatsApp Dispatch
-                </h4>
-                <p class="text-xs text-slate-500 mb-4">Choose whether receipts fire completely automated in the background via third-party webhooks or native browser tabs.</p>
-                <div class="grid grid-cols-2 gap-3 max-w-sm">
-                    <button onclick="setWhatsAppEndpoint('web')" id="wa-web" class="py-2.5 text-xs font-semibold rounded-lg border transition cursor-pointer">Direct Tab Mode</button>
-                    <button onclick="setWhatsAppEndpoint('api')" id="wa-api" class="py-2.5 text-xs font-semibold rounded-lg border transition cursor-pointer">Cloud Webhook Engine</button>
-                </div>
-                <div id="api-hook-config" class="hidden mt-4 space-y-2">
-                    <label class="block text-[10px] text-slate-400 uppercase tracking-wider font-mono">Custom API Webhook Gateway URL:</label>
-                    <input type="text" id="wa-webhook-url" placeholder="https://api.whatsapp-gateway.com/send" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-slate-500">
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4">
-                <h4 class="text-xs font-bold tracking-wider text-slate-400 uppercase flex items-center gap-2">
-                    <i data-lucide="vault" class="w-3.5 h-3.5 text-amber-400"></i> Active Shift Ledger Balance Vault
-                </h4>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                        <span class="text-[10px] text-slate-500 uppercase block tracking-wider font-semibold">M-Pesa Safe Total</span>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> Current Shift M-Pesa Safe Total
+                        </span>
                         <span id="vault-mpesa" class="font-mono text-2xl font-black text-slate-200 mt-1 block">0 KES</span>
                     </div>
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                        <span class="text-[10px] text-slate-500 uppercase block tracking-wider font-semibold">Physical Drawer Cash</span>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Current Shift Physical Drawer Cash
+                        </span>
                         <span id="vault-cash" class="font-mono text-2xl font-black text-slate-200 mt-1 block">0 KES</span>
                     </div>
                 </div>
 
-                <div class="pt-4 border-t border-slate-800/80 space-y-3">
-                    <label class="block text-xs text-rose-400 font-medium leading-relaxed">To clear transaction tables, archive metrics, and completely zero out the active drawer ledger for a new shift, verify by typing <span class="bg-rose-950/80 border border-rose-900 px-1.5 py-0.5 rounded text-white font-mono font-bold tracking-wider text-[11px]">RESET</span> below:</label>
-                    <div class="flex gap-2 max-w-md">
-                        <input type="text" id="reset-lock-input" placeholder="Verification string required" class="flex-1 bg-slate-950 border border-rose-900/40 rounded-lg px-3 py-2 text-xs text-rose-200 font-mono focus:outline-none focus:border-rose-500">
-                        <button onclick="executeShiftReset()" class="bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs px-5 py-2 rounded-lg transition cursor-pointer flex items-center gap-1.5 shrink-0">
-                            <i data-lucide="shield-alert" class="w-4 h-4"></i> Zero Ledger
-                        </button>
+                <!-- 24H, 7D, 30D Analytical Breakdown Suite Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Daily 24H Report -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl flex flex-col h-[400px]">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
+                            <h4 class="text-xs font-bold tracking-wider text-slate-200 uppercase flex items-center gap-1.5">
+                                <i data-lucide="clock-2" class="text-rose-400 w-4 h-4"></i> Daily Summary (24 Hrs)
+                            </h4>
+                            <span id="rep-count-24h" class="text-[10px] bg-rose-950 text-rose-400 border border-rose-900 font-mono px-2 py-0.5 rounded-md">0 Txns</span>
+                        </div>
+                        <div class="flex-1 overflow-y-auto custom-scroll space-y-4 pr-1 text-xs" id="rep-body-24h">
+                            <!-- Injects dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Weekly 7D Report -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl flex flex-col h-[400px]">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
+                            <h4 class="text-xs font-bold tracking-wider text-slate-200 uppercase flex items-center gap-1.5">
+                                <i data-lucide="calendar-days" class="text-blue-400 w-4 h-4"></i> Weekly Analytics (7 Days)
+                            </h4>
+                            <span id="rep-count-7d" class="text-[10px] bg-blue-950 text-blue-400 border border-blue-900 font-mono px-2 py-0.5 rounded-md">0 Txns</span>
+                        </div>
+                        <div class="flex-1 overflow-y-auto custom-scroll space-y-4 pr-1 text-xs" id="rep-body-7d">
+                            <!-- Injects dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Monthly 30D Report -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl flex flex-col h-[400px]">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
+                            <h4 class="text-xs font-bold tracking-wider text-slate-200 uppercase flex items-center gap-1.5">
+                                <i data-lucide="pie-chart" class="text-purple-400 w-4 h-4"></i> Monthly Volume (30 Days)
+                            </h4>
+                            <span id="rep-count-30d" class="text-[10px] bg-purple-950 text-purple-400 border border-purple-900 font-mono px-2 py-0.5 rounded-md">0 Txns</span>
+                        </div>
+                        <div class="flex-1 overflow-y-auto custom-scroll space-y-4 pr-1 text-xs" id="rep-body-30d">
+                            <!-- Injects dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: PRIVILEGED SECURITY OPERATIONS OVERRIDES -->
+            <div id="manager-tab-security" class="hidden max-w-xl mx-auto space-y-6">
+                <!-- PIN CONFIGURATION PANEL -->
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4">
+                    <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase flex items-center gap-2">
+                        <i data-lucide="key-round" class="w-3.5 h-3.5 text-amber-500"></i> Station Terminal PIN Management
+                    </h3>
+                    <p class="text-xs text-slate-500">Update workspace security clearance parameters in real-time. Changes deploy across all live client browser hubs instantly.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wide">New Staff PIN (4 Digits)</label>
+                            <div class="flex gap-2">
+                                <input type="password" id="new-staff-pin-input" maxlength="4" placeholder="••••" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-center text-sm font-mono focus:outline-none focus:border-blue-500 text-white tracking-widest">
+                                <button onclick="updateSystemPin('staff')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0">Update</button>
+                            </div>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wide">New Manager PIN (4 Digits)</label>
+                            <div class="flex gap-2">
+                                <input type="password" id="new-manager-pin-input" maxlength="4" placeholder="••••" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-center text-sm font-mono focus:outline-none focus:border-amber-500 text-white tracking-widest">
+                                <button onclick="updateSystemPin('manager')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WHATSAPP DISPATCH WORKSPACE TOGGLE -->
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+                    <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-2">
+                        <i data-lucide="message-square" class="w-3.5 h-3.5 text-emerald-400"></i> Automated WhatsApp Dispatch
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-4">Choose whether client receipts fire completely automated in the background via third-party webhooks or native web deep links.</p>
+                    <div class="grid grid-cols-2 gap-3 max-w-sm">
+                        <button onclick="setWhatsAppEndpoint('web')" id="wa-web" class="py-2.5 text-xs font-semibold rounded-lg border transition cursor-pointer">Direct Tab Mode</button>
+                        <button onclick="setWhatsAppEndpoint('api')" id="wa-api" class="py-2.5 text-xs font-semibold rounded-lg border transition cursor-pointer">Cloud Webhook Engine</button>
+                    </div>
+                    <div id="api-hook-config" class="hidden mt-4 space-y-2">
+                        <label class="block text-[10px] text-slate-400 uppercase tracking-wider font-mono">Custom API Webhook Gateway URL:</label>
+                        <input type="text" id="wa-webhook-url" placeholder="https://api.whatsapp-gateway.com/send" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-slate-500">
+                    </div>
+                </div>
+
+                <!-- PRIVILEGED ZERO METHOD WIPE ENGINE -->
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4 border-rose-900/40 bg-gradient-to-b from-slate-900 to-rose-950/10">
+                    <h3 class="text-xs font-bold tracking-wider text-rose-400 uppercase flex items-center gap-2">
+                        <i data-lucide="shield-alert" class="w-4 h-4"></i> Dangerous Area: Shift Ledger Reset
+                    </h3>
+                    <div class="pt-2 space-y-3">
+                        <label class="block text-xs text-slate-400 font-medium leading-relaxed">To archive metrics and completely zero out the active financial drawer ledger safe totals for a brand new shift, verify by typing <span class="bg-rose-950/80 border border-rose-900 px-1.5 py-0.5 rounded text-white font-mono font-bold tracking-wider text-[11px]">RESET</span> below:</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="reset-lock-input" placeholder="Verification string required" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-rose-200 font-mono focus:outline-none focus:border-rose-500">
+                            <button onclick="executeShiftReset()" class="bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs px-5 py-2 rounded-lg transition cursor-pointer flex items-center gap-1.5 shrink-0">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i> Zero Ledger
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
+    <!-- CLIENT TRANSACTION INVOICE POPUP MODAL -->
     <div id="receipt-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
         <div class="bg-white text-slate-950 w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-4 font-mono text-xs relative">
             <div class="text-center space-y-1">
@@ -247,7 +413,8 @@
             </div>
             
             <div class="border-t border-b border-dashed border-slate-300 py-3 space-y-2" id="receipt-items-log">
-                </div>
+                <!-- Items list dynamic generation -->
+            </div>
 
             <div class="space-y-1 text-right">
                 <div class="flex justify-between font-bold text-sm">
@@ -264,6 +431,7 @@
                 <p>Vibe Responsibly. Thank you for partying with us! 🥂</p>
             </div>
 
+            <!-- Client Action Mechanics Panel -->
             <div class="pt-2 flex flex-col gap-2">
                 <button id="whatsapp-send-btn" onclick="dispatchWhatsAppReceipt()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center gap-2 font-sans text-sm tracking-wide cursor-pointer shadow-md shadow-emerald-900/20">
                     <i data-lucide="message-circle" class="w-4 h-4 fill-white"></i> Send WhatsApp Receipt
@@ -275,25 +443,24 @@
         </div>
     </div>
 
+    <!-- ========================================== -->
+    <!--  FIREBASE MODULE INTEGRATION & INITS     -->
+    <!-- ========================================== -->
     <script type="importmap">
       {
         "imports": {
-          "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-          "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+          "firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+          "firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"
         }
       }
     </script>
 
     <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+        import { initializeApp } from "firebase/app";
+        import { getFirestore, doc, collection, deleteDoc, updateDoc, addDoc, setDoc, onSnapshot, query, orderBy, limit } from "firebase/firestore";
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
+        // 🔧 PLUG YOUR NEW FIREBASE APP CONFIG OBJECT HERE:
+        const firebaseConfig = {
     apiKey: "AIzaSyBzFcUZ7rTvUytKfcwrWrQhVYzXDUYThMg",
     authDomain: "final-ali.firebaseapp.com",
     projectId: "final-ali",
@@ -301,32 +468,21 @@
     messagingSenderId: "276282985744",
     appId: "1:276282985744:web:37cf81ef8d28ba1fe36995",
     measurementId: "G-W05YNT9R10"
+
   };
+
 
         const isFirebaseSetupPlaceholder = firebaseConfig.apiKey.includes("YOUR_");
 
         let db = null;
         let isCloudConnected = false;
 
-        // 🔐 Security Codes Global Cache Memory
-        let SECURITY_PINS = {
-            staff: "1234",     // Local fallback
-            manager: "2540"   // Local fallback
-        };
+        // 🔐 Master Access Fallbacks
+        let SECURITY_PINS = { staff: "1234", manager: "2540" };
         let activeSelectedRole = null;
 
-        // In-Memory Fallback App State
-        let stock = [
-            { id: '1', name: 'Tusker Cider', category: 'Beers', price: 300, stock: 48, pinned: true },
-            { id: '2', name: 'Guinness Smooth', category: 'Beers', price: 350, stock: 36, pinned: true },
-            { id: '3', name: 'White Cap Crisp', category: 'Beers', price: 280, stock: 60, pinned: true },
-            { id: '4', name: 'Captain Morgan Gold', category: 'Spirits', price: 250, stock: 12, pinned: true },
-            { id: '5', name: 'Jameson Whiskey', category: 'Spirits', price: 450, stock: 8, pinned: true },
-            { id: '6', name: 'Coca-Cola Zero', category: 'Soft Drinks', price: 150, stock: 120, pinned: true },
-            { id: '7', name: 'Shisha Exotic', category: 'Vibe Deck', price: 1200, stock: 99, pinned: false },
-            { id: '8', name: 'Red Bull Energy', category: 'Soft Drinks', price: 350, stock: 45, pinned: false }
-        ];
-
+        // Dynamic Runtime Stores
+        let stock = [];
         let basket = {};
         let pastTransactions = []; 
         let activePaymentMethod = 'mpesa';
@@ -346,8 +502,13 @@
                 badge.className = "bg-blue-500/10 border border-blue-500/20 text-blue-400 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2";
                 badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-400"></span> Local Sandbox Active`;
                 isCloudConnected = false;
+                // Seed local backup data to prevent blank screen layout failure in sandbox
+                stock = [
+                    { id: '1', name: 'Tusker Cider', category: 'Beers', price: 300, stock: 48, pinned: true },
+                    { id: '2', name: 'Guinness Smooth', category: 'Beers', price: 350, stock: 36, pinned: true }
+                ];
                 renderStock();
-                renderRecentTransactions();
+                renderManagerStockTable();
                 return;
             }
 
@@ -359,7 +520,7 @@
                 badge.className = "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2";
                 badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Cloud Stream Connected`;
 
-                // Live Sync Security PIN Documents Realtime Stream
+                // Realtime Listeners Pipelines
                 onSnapshot(doc(db, "security", "config"), (docSnap) => {
                     if (docSnap.exists()) {
                         const data = docSnap.data();
@@ -370,19 +531,15 @@
                     }
                 });
 
-                // Live Sync Stock Inventory Document Stream
                 onSnapshot(collection(db, "stock"), (snapshot) => {
-                    let updatedStock = [];
+                    stock = [];
                     snapshot.forEach(doc => {
-                        updatedStock.push({ id: doc.id, ...doc.data() });
+                        stock.push({ id: doc.id, ...doc.data() });
                     });
-                    if(updatedStock.length > 0) {
-                        stock = updatedStock;
-                        renderStock();
-                    }
+                    renderStock();
+                    renderManagerStockTable();
                 });
 
-                // Live Sync Shift Cash Vault Drawer Totals
                 onSnapshot(doc(db, "vault", "current_shift"), (docSnap) => {
                     if (docSnap.exists()) {
                         shiftVault = docSnap.data();
@@ -392,20 +549,19 @@
                     }
                 });
 
-                // Live Sync Recent Shift Transaction Ledger Receipts (Limit 25)
-                const txQuery = query(collection(db, "transactions"), orderBy("timestampOrder", "desc"), limit(25));
+                const txQuery = query(collection(db, "transactions"), orderBy("timestampOrder", "desc"));
                 onSnapshot(txQuery, (snapshot) => {
                     pastTransactions = [];
                     snapshot.forEach(doc => {
                         pastTransactions.push(doc.data());
                     });
                     renderRecentTransactions();
+                    generateChronosAnalyticalReports();
                 });
 
             } catch (err) {
-                console.error("Firebase pipeline initialization fail:", err);
+                console.error("Critical Cloud Exception Pipe Broken:", err);
                 isCloudConnected = false;
-                renderStock();
             }
         }
 
@@ -428,21 +584,40 @@
             window.executeShiftReset = executeShiftReset;
             window.renderStock = renderStock;
             window.cleanPhoneNumber = cleanPhoneNumber;
+            window.switchManagerTab = switchManagerTab;
+            window.submitStockItem = submitStockItem;
+            window.adjustStockCountDirect = adjustStockCountDirect;
+            window.purgeStockItem = purgeStockItem;
 
             setPaymentMethod('mpesa');
             setWhatsAppEndpoint('web');
+            switchManagerTab('inventory');
             lucide.createIcons();
         }
 
         // ==========================================
-        //         🔐 INTERFACE ROUTING ACCESS ENGINE
+        //        NAVIGATION TAB MAPPING CONTROLLER
+        // ==========================================
+        function switchManagerTab(tabId) {
+            const tabs = ['inventory', 'reports', 'security'];
+            tabs.forEach(t => {
+                document.getElementById(`manager-tab-${t}`).classList.add('hidden');
+                document.getElementById(`tab-btn-${t}`).className = "flex-1 sm:flex-none py-2 px-4 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-1.5 cursor-pointer";
+            });
+
+            document.getElementById(`manager-tab-${tabId}`).classList.remove('hidden');
+            
+            const colors = { inventory: 'bg-blue-600 text-white', reports: 'bg-emerald-600 text-white', security: 'bg-amber-500 text-slate-950' };
+            document.getElementById(`tab-btn-${tabId}`).className = `flex-1 sm:flex-none py-2 px-4 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${colors[tabId]}`;
+        }
+
+        // ==========================================
+        //         🔐 GATEWAY CONTROL AUTH ROUTERS
         // ==========================================
         function selectPortalRole(role) {
             activeSelectedRole = role;
-            
             document.getElementById('role-btn-staff').className = `p-4 bg-slate-800 border-2 ${role === 'staff' ? 'border-blue-500 bg-slate-800/80' : 'border-transparent'} rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group`;
             document.getElementById('role-btn-manager').className = `p-4 bg-slate-800 border-2 ${role === 'manager' ? 'border-amber-500 bg-slate-800/80' : 'border-transparent'} rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group`;
-
             document.getElementById('pin-prompt-text').textContent = `Enter ${role === 'manager' ? 'Manager Secret PIN' : 'Staff Station Key'}`;
             document.getElementById('portal-input-pin').value = '';
             document.getElementById('portal-error-text').classList.add('hidden');
@@ -452,43 +627,29 @@
 
         function backToRoleSelection() {
             activeSelectedRole = null;
-            document.getElementById('role-btn-staff').className = "p-4 bg-slate-800 border-2 border-transparent rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group";
-            document.getElementById('role-btn-manager').className = "p-4 bg-slate-800 border-2 border-transparent rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group";
             document.getElementById('portal-pin-zone').classList.add('hidden');
         }
 
         function verifyPortalLogin() {
-            const typedPin = document.getElementById('portal-input-pin').value;
-            const targetCorrectPin = SECURITY_PINS[activeSelectedRole];
-
-            if (typedPin === targetCorrectPin) {
+            if (document.getElementById('portal-input-pin').value === SECURITY_PINS[activeSelectedRole]) {
                 document.getElementById('portal-gate').classList.add('hidden');
-                
-                const navSub = document.getElementById('nav-station-sub');
-                const stockDeck = document.getElementById('main-stock-deck');
-                const billingDeck = document.getElementById('main-billing-deck');
-                const managerDeck = document.getElementById('isolated-manager-deck');
-
                 if (activeSelectedRole === 'manager') {
-                    navSub.textContent = "Admin Manager Dashboard";
-                    navSub.className = "text-[10px] text-amber-400 uppercase tracking-widest font-bold";
-                    
-                    stockDeck.classList.add('hidden');
-                    billingDeck.classList.add('hidden');
-                    managerDeck.classList.remove('hidden');
-                    syncVaultLabels();
+                    document.getElementById('nav-station-sub').textContent = "Admin Manager Control Center";
+                    document.getElementById('nav-station-sub').className = "text-[10px] text-amber-400 uppercase tracking-widest font-bold";
+                    document.getElementById('main-stock-deck').classList.add('hidden');
+                    document.getElementById('main-billing-deck').classList.add('hidden');
+                    document.getElementById('isolated-manager-deck').classList.remove('hidden');
+                    switchManagerTab('inventory');
                 } else {
-                    navSub.textContent = "Active Cashier Shift";
-                    navSub.className = "text-[10px] text-blue-400 uppercase tracking-widest font-bold";
-                    
-                    managerDeck.classList.add('hidden');
-                    stockDeck.classList.remove('hidden');
-                    billingDeck.classList.remove('hidden');
+                    document.getElementById('nav-station-sub').textContent = "Active Cashier Shift Workspace";
+                    document.getElementById('nav-station-sub').className = "text-[10px] text-blue-400 uppercase tracking-widest font-bold";
+                    document.getElementById('isolated-manager-deck').classList.add('hidden');
+                    document.getElementById('main-stock-deck').classList.remove('hidden');
+                    document.getElementById('main-billing-deck').classList.remove('hidden');
                     renderStock();
                 }
             } else {
-                const err = document.getElementById('portal-error-text');
-                err.classList.remove('hidden');
+                document.getElementById('portal-error-text').classList.remove('hidden');
                 document.getElementById('portal-input-pin').value = '';
                 document.getElementById('portal-input-pin').focus();
             }
@@ -498,46 +659,164 @@
             clearBasket();
             activeSelectedRole = null;
             document.getElementById('portal-input-pin').value = '';
-            document.getElementById('role-btn-staff').className = "p-4 bg-slate-800 border-2 border-transparent rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group";
-            document.getElementById('role-btn-manager').className = "p-4 bg-slate-800 border-2 border-transparent rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group";
             document.getElementById('portal-pin-zone').classList.add('hidden');
             document.getElementById('portal-gate').classList.remove('hidden');
         }
 
         // ==========================================
-        //       ⚙️ ADMINISTRATIVE SECURITY PIN ADJUSTMENT
+        //         📦 LIVE INVENTORY MANAGEMENT WRITES
         // ==========================================
-        async function updateSystemPin(role) {
-            const inputId = role === 'staff' ? 'new-staff-pin-input' : 'new-manager-pin-input';
-            const newPin = document.getElementById(inputId).value.trim();
+        async function submitStockItem() {
+            const name = document.getElementById('inv-name').value.trim();
+            const category = document.getElementById('inv-category').value;
+            const price = parseInt(document.getElementById('inv-price').value) || 0;
+            const itemStockCount = parseInt(document.getElementById('inv-stock').value) || 0;
+            const pinned = document.getElementById('inv-pinned').checked;
 
-            if (newPin.length !== 4 || isNaN(newPin)) {
-                alert("Validation Failed: PIN must be exactly 4 numeric characters.");
+            if (!name || price <= 0 || itemStockCount < 0) {
+                alert("Data Rejection: Provide clean non-zero product names and asset pricing metrics.");
                 return;
             }
 
+            const payload = { name, category, price, stock: itemStockCount, pinned };
+
             if (isCloudConnected) {
                 try {
-                    const configRef = doc(db, "security", "config");
-                    if (role === 'staff') {
-                        await updateDoc(configRef, { staff_pin: newPin });
-                    } else {
-                        await updateDoc(configRef, { manager_pin: newPin });
-                    }
-                    alert(`Success: Cloud Synced. New ${role} PIN activated!`);
-                } catch (err) {
-                    console.error("Cloud PIN Save Failure:", err);
-                    alert("Database write rejected.");
-                }
+                    await addDoc(collection(db, "stock"), payload);
+                    alert(`Success: ${name} pushed live to Firestore!`);
+                } catch(e) { alert("Write access rule denied."); }
             } else {
-                SECURITY_PINS[role] = newPin;
-                alert(`Sandbox Mode: Local ${role} PIN adjusted to ${newPin}`);
+                payload.id = 'L-' + Date.now();
+                stock.push(payload);
+                renderStock();
+                renderManagerStockTable();
             }
-            document.getElementById(inputId).value = '';
+
+            document.getElementById('inv-name').value = '';
+            document.getElementById('inv-price').value = '';
+            document.getElementById('inv-stock').value = '';
+            document.getElementById('inv-pinned').checked = false;
+        }
+
+        async function adjustStockCountDirect(id, direction) {
+            const match = stock.find(p => p.id === id);
+            if (!match) return;
+            const nextValue = direction === 'up' ? match.stock + 12 : Math.max(0, match.stock - 1);
+
+            if (isCloudConnected) {
+                await updateDoc(doc(db, "stock", id), { stock: nextValue });
+            } else {
+                match.stock = nextValue;
+                renderStock();
+                renderManagerStockTable();
+            }
+        }
+
+        async function purgeStockItem(id) {
+            if (!confirm("Are you sure you want to permanently delete this item from the bar catalog?")) return;
+            if (isCloudConnected) {
+                await deleteDoc(doc(db, "stock", id));
+            } else {
+                stock = stock.filter(p => p.id !== id);
+                renderStock();
+                renderManagerStockTable();
+            }
+        }
+
+        function renderManagerStockTable() {
+            const tbody = document.getElementById('manager-stock-rows');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            if(stock.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500">No stock configured. Use the form to seed your bar items.</td></tr>`;
+                return;
+            }
+
+            stock.forEach(item => {
+                const tr = `
+                    <tr class="border-b border-slate-900 hover:bg-slate-900/40 text-slate-300 font-mono">
+                        <td class="p-3 font-sans font-bold">
+                            <div class="flex items-center gap-1.5">
+                                ${item.pinned ? '<i data-lucide="zap" class="w-3 h-3 text-amber-400 fill-amber-400 shrink-0"></i>' : ''}
+                                <span>${item.name}</span>
+                            </div>
+                        </td>
+                        <td class="p-3 text-slate-400 font-sans">${item.category}</td>
+                        <td class="p-3 text-blue-400">${item.price} KES</td>
+                        <td class="p-3 font-bold ${item.stock <= 5 ? 'text-rose-400' : 'text-slate-300'}">${item.stock} units</td>
+                        <td class="p-3">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="adjustStockCountDirect('${item.id}', 'up')" class="bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded font-sans font-bold text-[10px] text-emerald-400 cursor-pointer">+12 Restock</button>
+                                <button onclick="adjustStockCountDirect('${item.id}', 'down')" class="bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded font-sans font-bold text-[10px] text-amber-400 cursor-pointer">-1 Snipe</button>
+                                <button onclick="purgeStockItem('${item.id}')" class="bg-rose-950/40 border border-rose-900/30 hover:bg-rose-900 text-rose-300 p-1 rounded cursor-pointer transition"><i data-lucide="trash" class="w-3 h-3"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', tr);
+            });
+            lucide.createIcons();
         }
 
         // ==========================================
-        //         🛒 POS TERMINAL CORE GRAPHICS RENDER
+        //         📊 ADVANCED ANALYTICS REPORT ENGINE
+        // ==========================================
+        function generateChronosAnalyticalReports() {
+            const bodies = { '24h': document.getElementById('rep-body-24h'), '7d': document.getElementById('rep-body-7d'), '30d': document.getElementById('rep-body-30d') };
+            const counts = { '24h': document.getElementById('rep-count-24h'), '7d': document.getElementById('rep-count-7d'), '30d': document.getElementById('rep-count-30d') };
+            
+            if(!bodies['24h']) return; 
+
+            const thresholds = { '24h': Date.now() - 24 * 60 * 60 * 1000, '7d': Date.now() - 7 * 24 * 60 * 60 * 1000, '30d': Date.now() - 30 * 24 * 60 * 60 * 1000 };
+            
+            ['24h', '7d', '30d'].forEach(bucket => {
+                const limitTime = thresholds[bucket];
+                const filteredTx = pastTransactions.filter(t => t.timestampOrder >= limitTime);
+                
+                counts[bucket].textContent = `${filteredTx.length} Txns`;
+
+                let gross = 0; let mpesaSum = 0; let cashSum = 0;
+                let volumeMap = {};
+
+                filteredTx.forEach(t => {
+                    gross += t.total;
+                    if(t.paymentMode === 'mpesa') mpesaSum += t.total; else cashSum += t.total;
+
+                    Object.values(t.items).forEach(itm => {
+                        volumeMap[itm.name] = (volumeMap[itm.name] || 0) + itm.qty;
+                    });
+                });
+
+                let sortedVolumes = Object.entries(volumeMap).sort((a,b) => b[1] - a[1]).slice(0, 5);
+                let rankingHTML = sortedVolumes.map(([name, qty]) => `
+                    <div class="flex justify-between items-center bg-slate-950/40 p-1.5 rounded border border-slate-800/40">
+                        <span class="truncate max-w-[150px] font-sans text-slate-300 font-medium">${name}</span>
+                        <span class="font-bold text-amber-400 font-mono text-[11px]">${qty} units</span>
+                    </div>
+                `).join('');
+
+                if(rankingHTML === '') rankingHTML = `<p class="text-slate-600 italic text-center py-2 text-[11px]">No product turnouts logged.</p>`;
+
+                bodies[bucket].innerHTML = `
+                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5 shrink-0">
+                        <span class="text-[10px] uppercase text-slate-500 font-bold block tracking-wider">Gross Volume Turnover</span>
+                        <div class="text-xl font-black text-white font-mono">${gross} <span class="text-xs text-slate-400">KES</span></div>
+                        <div class="flex justify-between text-[10px] text-slate-400 font-mono pt-1.5 border-t border-slate-800">
+                            <span>M-Pesa: <b class="text-blue-400">${mpesaSum}</b></span>
+                            <span>Cash: <b class="text-emerald-400">${cashSum}</b></span>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block">Top Moving Bar Stock</span>
+                        ${rankingHTML}
+                    </div>
+                `;
+            });
+        }
+
+        // ==========================================
+        //         🛒 CASHIER WORKSPACE ENGINE
         // ==========================================
         function renderStock() {
             const stockGrid = document.getElementById('stock-grid');
@@ -547,6 +826,8 @@
             const queryVal = document.getElementById('search-bar').value.toLowerCase();
             stockGrid.innerHTML = '';
             quickGrid.innerHTML = '';
+
+            let hasSpeedDeckItems = false;
 
             stock.forEach(item => {
                 const htmlCard = `
@@ -577,12 +858,20 @@
 
                 if (item.pinned && queryVal === '') {
                     quickGrid.insertAdjacentHTML('beforeend', htmlQuickPin);
+                    hasSpeedDeckItems = true;
                 }
 
                 if (item.name.toLowerCase().includes(queryVal) || item.category.toLowerCase().includes(queryVal)) {
                     stockGrid.insertAdjacentHTML('beforeend', htmlCard);
                 }
             });
+
+            if(!hasSpeedDeckItems && queryVal === '') {
+                quickGrid.innerHTML = `<div class="col-span-full py-4 text-center text-slate-600 text-xs italic">No speed items pinned by Manager.</div>`;
+            }
+            if(stockGrid.innerHTML === '') {
+                stockGrid.innerHTML = `<div class="col-span-full py-8 text-center text-slate-500 text-sm">No items match filters.</div>`;
+            }
             lucide.createIcons();
         }
 
@@ -590,7 +879,7 @@
             const product = stock.find(p => p.id === id);
             if (!product) return;
             if (product.stock <= 0) {
-                alert(`Stock Depleted: ${product.name} is out of stock!`);
+                alert(`Stock Depleted: ${product.name} needs a container restock from manager!`);
                 return;
             }
             if (basket[id]) {
@@ -667,13 +956,9 @@
 
         function cleanPhoneNumber(inputElement) {
             let value = inputElement.value.replace(/[^0-9+]/g, '');
-            if (value.startsWith('+254')) {
-                value = '254' + value.slice(4);
-            } else if (value.startsWith('0')) {
-                value = '254' + value.slice(1);
-            } else if (value.startsWith('7') || value.startsWith('1')) {
-                value = '254' + value;
-            }
+            if (value.startsWith('+254')) value = '254' + value.slice(4);
+            else if (value.startsWith('0')) value = '254' + value.slice(1);
+            else if ((value.startsWith('7') || value.startsWith('1')) && value.length === 9) value = '254' + value;
             inputElement.value = value;
         }
 
@@ -695,9 +980,7 @@
         }
 
         function calculateCashChange() {
-            const totalBox = document.getElementById('basket-total');
-            if(!totalBox) return;
-            const numericTotal = parseInt(totalBox.textContent) || 0;
+            const numericTotal = parseInt(document.getElementById('basket-total').textContent) || 0;
             const numericTendered = parseInt(document.getElementById('cash-tendered').value) || 0;
             const balanceLabel = document.getElementById('cash-change-due');
 
@@ -711,14 +994,11 @@
         }
 
         async function executeCheckout() {
-            if (Object.keys(basket).length === 0) {
-                alert("Checkout Cancelled: Active sales bill container is empty.");
-                return;
-            }
+            if (Object.keys(basket).length === 0) return;
 
             const phoneField = document.getElementById('cust-phone');
             if (!phoneField.value || phoneField.value.length < 9) {
-                alert("Validation Failure: Valid customer phone required for receipt distribution.");
+                alert("Validation Failure: Valid phone required for WhatsApp execution routing.");
                 phoneField.focus();
                 return;
             }
@@ -745,7 +1025,7 @@
                         const targetItemRef = doc(db, "stock", id);
                         const localObj = stock.find(p => p.id === id);
                         if (localObj) {
-                            await updateDoc(targetItemRef, { stock: localObj.stock - basket[id].qty });
+                            await updateDoc(targetItemRef, { stock: Math.max(0, localObj.stock - basket[id].qty) });
                         }
                     }
 
@@ -755,31 +1035,26 @@
                     } else {
                         await updateDoc(vaultRef, { cash: shiftVault.cash + basketTotalAmt });
                     }
-
-                } catch (err) {
-                    console.error("Cloud Write Aborted:", err);
-                }
+                } catch (err) { console.error("Cloud Write Aborted:", err); }
             } else {
                 Object.keys(basket).forEach(id => {
                     const stockRecord = stock.find(p => p.id === id);
-                    if (stockRecord) stockRecord.stock -= basket[id].qty;
+                    if (stockRecord) stockRecord.stock = Math.max(0, stockRecord.stock - basket[id].qty);
                 });
 
-                if (activePaymentMethod === 'mpesa') {
-                    shiftVault.mpesa += basketTotalAmt;
-                } else {
-                    shiftVault.cash += basketTotalAmt;
-                }
+                if (activePaymentMethod === 'mpesa') shiftVault.mpesa += basketTotalAmt;
+                else shiftVault.cash += basketTotalAmt;
 
                 pastTransactions.unshift(txData);
                 renderStock();
+                renderManagerStockTable();
                 renderRecentTransactions();
+                generateChronosAnalyticalReports();
                 syncVaultLabels();
             }
 
             launchReceiptModal(txData);
             clearBasket();
-            
             phoneField.value = '';
             document.getElementById('cash-tendered').value = '';
             document.getElementById('cash-change-due').textContent = "0 KES";
@@ -798,7 +1073,8 @@
                 return;
             }
 
-            pastTransactions.forEach((txn, index) => {
+            // Slice out top 10 for the quick bar view sidebar
+            pastTransactions.slice(0, 10).forEach((txn, index) => {
                 const itemSummary = Object.values(txn.items).map(i => `${i.qty}x ${i.name}`).join(', ');
                 const isMpesa = txn.paymentMode === 'mpesa';
 
@@ -814,9 +1090,7 @@
                         </div>
                         <div class="flex flex-col items-end gap-1.5 shrink-0">
                             <span class="font-mono text-xs font-bold text-slate-200">${txn.total} KES</span>
-                            <button onclick="recallPastInvoice(${index})" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded flex items-center gap-1 transition cursor-pointer">
-                                <i data-lucide="external-link" class="w-2.5 h-2.5"></i> Pull
-                            </button>
+                            <button onclick="recallPastInvoice(${index})" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded flex items-center gap-1 transition cursor-pointer"><i data-lucide="external-link" class="w-2.5 h-2.5"></i> Pull</button>
                         </div>
                     </div>
                 `;
@@ -841,15 +1115,13 @@
 
             Object.keys(invoice.items).forEach(id => {
                 const item = invoice.items[id];
-                const entryHTML = `
+                logBox.insertAdjacentHTML('beforeend', `
                     <div class="flex justify-between items-center text-[11px]">
                         <span>${item.name} (x${item.qty})</span>
                         <span class="font-bold">${item.price * item.qty} KES</span>
                     </div>
-                `;
-                logBox.insertAdjacentHTML('beforeend', entryHTML);
+                `);
             });
-
             document.getElementById('receipt-modal').classList.remove('hidden');
         }
 
@@ -859,7 +1131,7 @@
         }
 
         // ==========================================
-        //         💬 WHATSAPP RECENT COMM ENGINE
+        //         💬 WHATSAPP COMM ENGINE
         // ==========================================
         async function dispatchWhatsAppReceipt() {
             if (!currentCompletedInvoice) return;
@@ -882,10 +1154,7 @@
 
             if (configWhatsAppMode === 'api') {
                 const webhookUrl = document.getElementById('wa-webhook-url').value.trim();
-                if(!webhookUrl) {
-                    alert("Configuration Missing: Webhook destination string missing.");
-                    return;
-                }
+                if(!webhookUrl) { alert("API Hook missing target URL string."); return; }
 
                 btn.disabled = true;
                 btn.innerHTML = `<span class="animate-pulse">Firing Cloud Hook...</span>`;
@@ -894,17 +1163,11 @@
                     await fetch(webhookUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            to: currentCompletedInvoice.phone,
-                            message: message,
-                            txnId: currentCompletedInvoice.id
-                        })
+                        body: JSON.stringify({ to: currentCompletedInvoice.phone, message, txnId: currentCompletedInvoice.id })
                     });
                     alert("Cloud Webhook Dispatched Successfully!");
-                } catch(e) {
-                    alert("Connection Fallback: Webhook timed out. Routing via local window deep link.");
-                    openWhatsAppDeepLink(currentCompletedInvoice.phone, message);
-                } finally {
+                } catch(e) { openWhatsAppDeepLink(currentCompletedInvoice.phone, message); } 
+                finally {
                     btn.disabled = false;
                     btn.innerHTML = originalHTML;
                     lucide.createIcons();
@@ -915,8 +1178,7 @@
         }
 
         function openWhatsAppDeepLink(phone, message) {
-            const encodedMessage = encodeURIComponent(message);
-            window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`, '_blank');
+            window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`, '_blank');
         }
 
         function setWhatsAppEndpoint(mode) {
@@ -936,6 +1198,30 @@
             }
         }
 
+        // ==========================================
+        //         🔐 SECURITY MUTATION WRITES
+        // ==========================================
+        async function updateSystemPin(role) {
+            const inputId = role === 'staff' ? 'new-staff-pin-input' : 'new-manager-pin-input';
+            const newPin = document.getElementById(inputId).value.trim();
+
+            if (newPin.length !== 4 || isNaN(newPin)) {
+                alert("Validation Failed: Security PIN string must match 4 character numbers.");
+                return;
+            }
+
+            if (isCloudConnected) {
+                const configRef = doc(db, "security", "config");
+                if (role === 'staff') await updateDoc(configRef, { staff_pin: newPin });
+                else await updateDoc(configRef, { manager_pin: newPin });
+                alert(`Success: Cloud Synced. New ${role} access PIN deployed!`);
+            } else {
+                SECURITY_PINS[role] = newPin;
+                alert(`Sandbox: Local assignment altered to ${newPin}`);
+            }
+            document.getElementById(inputId).value = '';
+        }
+
         function syncVaultLabels() {
             const mLabel = document.getElementById('vault-mpesa');
             const cLabel = document.getElementById('vault-cash');
@@ -946,27 +1232,23 @@
         }
 
         async function executeShiftReset() {
-            const inputField = document.getElementById('reset-lock-input');
-            if (inputField.value.trim() !== 'RESET') {
-                alert("Verification string mismatch. Clear action aborted.");
+            if (document.getElementById('reset-lock-input').value.trim() !== 'RESET') {
+                alert("Verification failure. Action aborted.");
                 return;
             }
 
             if (isCloudConnected) {
-                try {
-                    await setDoc(doc(db, "vault", "current_shift"), { mpesa: 0, cash: 0 });
-                    alert("Database Ledger Zeroed out successfully!");
-                } catch(e) { console.error(e); }
+                await setDoc(doc(db, "vault", "current_shift"), { mpesa: 0, cash: 0 });
+                alert("Database Safe Drawer Ledger Zeroed out.");
             } else {
-                shiftVault.mpesa = 0;
-                shiftVault.cash = 0;
+                shiftVault = { mpesa: 0, cash: 0 };
                 pastTransactions = [];
                 syncVaultLabels();
                 renderRecentTransactions();
-                alert("Local Memory Reset Completed.");
+                generateChronosAnalyticalReports();
+                alert("Local Cache Memory Wiped Clean.");
             }
-
-            inputField.value = '';
+            document.getElementById('reset-lock-input').value = '';
             lockSystemStation();
         }
     </script>
