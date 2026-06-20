@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sweet Fancy Pub - Unified Engine</title>
-    <!-- PWA Installation Assets Hook -->
+    <title>Sweet Fancy Pub - Unified POS</title>
+    
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <!-- Tailwind CSS for sleek layout styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+    
     <style>
         body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, sans-serif; }
         .custom-scroll::-webkit-scrollbar { width: 6px; }
@@ -22,9 +22,6 @@
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
 
-    <!-- ========================================== -->
-    <!--     PORTAL FRONT GATEWAY (INITIAL SCREEN)   -->
-    <!-- ========================================== -->
     <div id="portal-gate" class="fixed inset-0 bg-slate-950 z-[100] flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-8 shadow-2xl space-y-6 text-center">
             <div class="space-y-2">
@@ -33,7 +30,6 @@
                 <p class="text-xs text-slate-400">Select your station workspace role to authenticate</p>
             </div>
 
-            <!-- Role Selector Buttons -->
             <div id="role-selection-zone" class="grid grid-cols-2 gap-3">
                 <button onclick="selectPortalRole('staff')" id="role-btn-staff" class="p-4 bg-slate-800 border-2 border-transparent rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group">
                     <i data-lucide="users" class="text-slate-400 group-hover:text-blue-400 w-6 h-6"></i>
@@ -45,8 +41,7 @@
                 </button>
             </div>
 
-            <!-- Dynamic PIN Field Form -->
-            <div id="portal-pin-zone" class="hidden space-y-4 pt-2 border-t border-slate-800/60 animate-fade-in">
+            <div id="portal-pin-zone" class="hidden space-y-4 pt-2 border-t border-slate-800/60">
                 <p id="pin-prompt-text" class="text-xs text-slate-400 font-medium">Enter Access Code</p>
                 <input type="password" id="portal-input-pin" maxlength="4" placeholder="••••" class="w-36 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-3xl tracking-widest text-white focus:outline-none focus:border-amber-500 font-mono">
                 <div id="portal-error-text" class="text-xs text-rose-400 hidden font-semibold">Invalid Access PIN. Entry Denied.</div>
@@ -60,10 +55,6 @@
     </div>
 
 
-    <!-- ========================================== -->
-    <!--        MAIN OPERATIONAL SYSTEM INTERFACE    -->
-    <!-- ========================================== -->
-    <!-- TOP NAVIGATION BAR -->
     <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex justify-between items-center shrink-0">
         <div class="flex items-center gap-3">
             <div class="bg-amber-500 text-slate-950 p-2 rounded-lg font-black tracking-wider text-sm">SF</div>
@@ -82,24 +73,19 @@
         </div>
     </header>
 
-    <!-- MAIN BODY DIVISION -->
     <div class="flex flex-1 overflow-hidden">
         
-        <!-- LEFT: STOCK GRID & QUICK TAP -->
         <main id="main-stock-deck" class="flex-1 p-6 flex flex-col gap-6 overflow-y-auto custom-scroll">
-            <!-- Quick Tap Section -->
             <div>
                 <h2 class="text-xs font-bold tracking-widest text-slate-400 uppercase mb-3 flex items-center gap-2">
                     <i data-lucide="zap" class="w-4 h-4 text-amber-400 fill-amber-400"></i> Speed Deck (Pinned Items)
                 </h2>
                 <div id="quick-tap-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <!-- Dynamic pins inject here -->
-                </div>
+                    </div>
             </div>
 
             <hr class="border-slate-800">
 
-            <!-- Full Catalog Section -->
             <div class="flex-1">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xs font-bold tracking-widest text-slate-400 uppercase flex items-center gap-2">
@@ -108,14 +94,11 @@
                     <input type="text" id="search-bar" oninput="renderStock()" placeholder="Quick filter stock..." class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-slate-500 w-48">
                 </div>
                 <div id="stock-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Catalog injects here -->
-                </div>
+                    </div>
             </div>
         </main>
 
-        <!-- RIGHT: CASHIER BASKET & RECENT ORDERS -->
         <aside id="main-billing-deck" class="w-96 bg-slate-900 border-l border-slate-800 flex flex-col h-full shrink-0">
-            <!-- Active Basket Header -->
             <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900">
                 <h3 class="font-bold flex items-center gap-2 text-sm text-slate-300">
                     <i data-lucide="shopping-cart" class="w-4 h-4"></i> Current Bill
@@ -123,12 +106,9 @@
                 <button onclick="clearBasket()" class="text-xs text-slate-500 hover:text-rose-400 transition cursor-pointer">Clear Basket</button>
             </div>
 
-            <!-- Basket Items List -->
             <div id="basket-container" class="h-1/2 overflow-y-auto p-4 flex flex-col gap-3 custom-scroll border-b border-slate-800/60">
-                <!-- Basket items inject here -->
-            </div>
+                </div>
 
-            <!-- Recent Transactions History Log -->
             <div class="p-3 bg-slate-900/40 border-b border-slate-800 flex items-center gap-2 justify-between">
                 <h4 class="text-[11px] font-bold tracking-wider text-slate-400 uppercase flex items-center gap-1.5">
                     <i data-lucide="history" class="w-3.5 h-3.5 text-slate-500"></i> Recent Shift Activity
@@ -136,10 +116,8 @@
                 <span id="activity-counter" class="text-[10px] font-mono bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">0 paid</span>
             </div>
             <div id="recent-transactions-container" class="flex-1 overflow-y-auto p-3 flex flex-col gap-2 custom-scroll bg-slate-950/30">
-                <!-- Executed logs inject here dynamically -->
-            </div>
+                </div>
 
-            <!-- Totals & Payment Control Area -->
             <div class="p-4 bg-slate-950 border-t border-slate-800 flex flex-col gap-4">
                 <div class="flex justify-between items-center">
                     <span class="text-sm font-medium text-slate-400">Total Amount:</span>
@@ -164,7 +142,6 @@
                         </div>
                     </div>
 
-                    <!-- Dynamic Change Calculator -->
                     <div id="change-calculator-deck" class="hidden bg-slate-900 border border-slate-800 p-3 rounded-lg space-y-2">
                         <div class="flex justify-between items-center">
                             <label class="text-xs text-slate-400">Amount Given:</label>
@@ -177,14 +154,12 @@
                     </div>
                 </div>
 
-                <!-- Primary Action Button -->
                 <button onclick="executeCheckout()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 px-4 rounded-xl shadow-lg transition tracking-wide text-sm flex items-center justify-center gap-2 cursor-pointer">
                     <i data-lucide="check-circle"></i> Complete Order & Cloud Sync
                 </button>
             </div>
         </aside>
 
-        <!-- PURE MANAGER ISOLATED CONTROL CORE VIEW -->
         <main id="isolated-manager-deck" class="hidden flex-1 p-6 overflow-y-auto custom-scroll space-y-6 max-w-2xl mx-auto">
             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                 <div>
@@ -195,7 +170,31 @@
                 </div>
             </div>
 
-            <!-- WhatsApp Dispatch Setting Toggle -->
+            <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4">
+                <h4 class="text-xs font-bold tracking-wider text-slate-400 uppercase flex items-center gap-2">
+                    <i data-lucide="key-round" class="w-3.5 h-3.5 text-amber-500"></i> Station Terminal PIN Management
+                </h4>
+                <p class="text-xs text-slate-500">Update system access codes in real-time. Changes sync across all devices instantly.</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wide">New Staff PIN (4 Digits)</label>
+                        <div class="flex gap-2">
+                            <input type="password" id="new-staff-pin-input" maxlength="4" placeholder="••••" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-center text-sm font-mono focus:outline-none focus:border-blue-500 text-white tracking-widest">
+                            <button onclick="updateSystemPin('staff')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0">Update</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wide">New Manager PIN (4 Digits)</label>
+                        <div class="flex gap-2">
+                            <input type="password" id="new-manager-pin-input" maxlength="4" placeholder="••••" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-center text-sm font-mono focus:outline-none focus:border-amber-500 text-white tracking-widest">
+                            <button onclick="updateSystemPin('manager')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
                 <h4 class="text-xs font-bold tracking-wider text-slate-400 uppercase mb-2 flex items-center gap-2">
                     <i data-lucide="message-square" class="w-3.5 h-3.5 text-emerald-400"></i> Automated WhatsApp Dispatch
@@ -205,39 +204,12 @@
                     <button onclick="setWhatsAppEndpoint('web')" id="wa-web" class="py-2.5 text-xs font-semibold rounded-lg border transition cursor-pointer">Direct Tab Mode</button>
                     <button onclick="setWhatsAppEndpoint('api')" id="wa-api" class="py-2.5 text-xs font-semibold rounded-lg border transition cursor-pointer">Cloud Webhook Engine</button>
                 </div>
-                <div id="api-hook-config" class="hidden mt-4 space-y-2 animate-fade-in">
+                <div id="api-hook-config" class="hidden mt-4 space-y-2">
                     <label class="block text-[10px] text-slate-400 uppercase tracking-wider font-mono">Custom API Webhook Gateway URL:</label>
                     <input type="text" id="wa-webhook-url" placeholder="https://api.whatsapp-gateway.com/send" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-slate-500">
                 </div>
             </div>
-            <!-- SECURE PIN MANAGEMENT ENGINE -->
-<div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4">
-    <h4 class="text-xs font-bold tracking-wider text-slate-400 uppercase flex items-center gap-2">
-        <i data-lucide="key-round" class="w-3.5 h-3.5 text-amber-500"></i> Station Terminal PIN Management
-    </h4>
-    <p class="text-xs text-slate-500">Update system access codes in real-time. Changes sync across all devices instantly.</p>
-    
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <!-- Change Staff PIN -->
-        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wide">New Staff PIN (4 Digits)</label>
-            <div class="flex gap-2">
-                <input type="password" id="new-staff-pin-input" maxlength="4" placeholder="••••" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-center text-sm font-mono focus:outline-none focus:border-blue-500">
-                <button onclick="updateSystemPin('staff')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0">Update</button>
-            </div>
-        </div>
 
-        <!-- Change Manager PIN -->
-        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wide">New Manager PIN (4 Digits)</label>
-            <div class="flex gap-2">
-                <input type="password" id="new-manager-pin-input" maxlength="4" placeholder="••••" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-center text-sm font-mono focus:outline-none focus:border-amber-500">
-                <button onclick="updateSystemPin('manager')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0">Update</button>
-            </div>
-        </div>
-    </div>
-</div>
-            <!-- Live Vault / Shift Summary -->
             <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4">
                 <h4 class="text-xs font-bold tracking-wider text-slate-400 uppercase flex items-center gap-2">
                     <i data-lucide="vault" class="w-3.5 h-3.5 text-amber-400"></i> Active Shift Ledger Balance Vault
@@ -253,7 +225,6 @@
                     </div>
                 </div>
 
-                <!-- Double Locked Shift Wipe Control -->
                 <div class="pt-4 border-t border-slate-800/80 space-y-3">
                     <label class="block text-xs text-rose-400 font-medium leading-relaxed">To clear transaction tables, archive metrics, and completely zero out the active drawer ledger for a new shift, verify by typing <span class="bg-rose-950/80 border border-rose-900 px-1.5 py-0.5 rounded text-white font-mono font-bold tracking-wider text-[11px]">RESET</span> below:</label>
                     <div class="flex gap-2 max-w-md">
@@ -267,7 +238,6 @@
         </main>
     </div>
 
-    <!-- CLIENT TRANSACTION INVOICE POPUP MODAL -->
     <div id="receipt-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
         <div class="bg-white text-slate-950 w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-4 font-mono text-xs relative">
             <div class="text-center space-y-1">
@@ -277,8 +247,7 @@
             </div>
             
             <div class="border-t border-b border-dashed border-slate-300 py-3 space-y-2" id="receipt-items-log">
-                <!-- Items list dynamic generation -->
-            </div>
+                </div>
 
             <div class="space-y-1 text-right">
                 <div class="flex justify-between font-bold text-sm">
@@ -295,7 +264,6 @@
                 <p>Vibe Responsibly. Thank you for partying with us! 🥂</p>
             </div>
 
-            <!-- Client Action Mechanics Panel -->
             <div class="pt-2 flex flex-col gap-2">
                 <button id="whatsapp-send-btn" onclick="dispatchWhatsAppReceipt()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center gap-2 font-sans text-sm tracking-wide cursor-pointer shadow-md shadow-emerald-900/20">
                     <i data-lucide="message-circle" class="w-4 h-4 fill-white"></i> Send WhatsApp Receipt
@@ -307,46 +275,47 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!--  FIREBASE & SYSTEM STORAGE PIPELINE DOCK   -->
-    <!-- ========================================== -->
     <script type="importmap">
       {
         "imports": {
-          "firebase/app": "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js",
-          "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js"
+          "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+          "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
         }
       }
     </script>
 
     <script type="module">
-        import { initializeApp } from "firebase/app";
-        import { getFirestore, doc, collection, getDocs, updateDoc, addDoc, setDoc, onSnapshot, query, orderBy, limit, getDoc } from "firebase/firestore";
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-        // 🔧 REPLACE THIS CONFIG OBJECT WITH YOUR FIREBASE ACCOUNT DETAILS
-        const firebaseConfig = {
-  apiKey: "AIzaSyBnddPDgZFAX9-m5kUBp6tnWeS9_8uafq0",
-  authDomain: "sweet-fancy-pub.firebaseapp.com",
-  projectId: "sweet-fancy-pub",
-  storageBucket: "sweet-fancy-pub.firebasestorage.app",
-  messagingSenderId: "177643010018",
-  appId: "1:177643010018:web:eb5cafb7e6e36873b8abbb",
-  measurementId: "G-8DXKBZ08RY"
-};
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBzFcUZ7rTvUytKfcwrWrQhVYzXDUYThMg",
+    authDomain: "final-ali.firebaseapp.com",
+    projectId: "final-ali",
+    storageBucket: "final-ali.firebasestorage.app",
+    messagingSenderId: "276282985744",
+    appId: "1:276282985744:web:37cf81ef8d28ba1fe36995",
+    measurementId: "G-W05YNT9R10"
+  };
 
         const isFirebaseSetupPlaceholder = firebaseConfig.apiKey.includes("YOUR_");
 
         let db = null;
         let isCloudConnected = false;
 
-        // 🔐 Security Credentials Memory State Stores
+        // 🔐 Security Codes Global Cache Memory
         let SECURITY_PINS = {
-            staff: "1234",     // Fallback Sandbox Staff Pin
-            manager: "2540"   // Fallback Sandbox Manager Pin
+            staff: "1234",     // Local fallback
+            manager: "2540"   // Local fallback
         };
         let activeSelectedRole = null;
 
-        // Stock and UI Management States
+        // In-Memory Fallback App State
         let stock = [
             { id: '1', name: 'Tusker Cider', category: 'Beers', price: 300, stock: 48, pinned: true },
             { id: '2', name: 'Guinness Smooth', category: 'Beers', price: 350, stock: 36, pinned: true },
@@ -370,44 +339,12 @@
             setupUIGlobals();
         });
 
-        async function updateSystemPin(role) {
-    const inputId = role === 'staff' ? 'new-staff-pin-input' : 'new-manager-pin-input';
-    const newPin = document.getElementById(inputId).value.trim();
-
-    // Validation Check
-    if (newPin.length !== 4 || isNaN(newPin)) {
-        alert("Validation Failed: PIN must be exactly 4 numeric characters.");
-        return;
-    }
-
-    if (isCloudConnected) {
-        try {
-            const configRef = doc(db, "security", "config");
-            if (role === 'staff') {
-                await updateDoc(configRef, { staff_pin: newPin });
-            } else {
-                await updateDoc(configRef, { manager_pin: newPin });
-            }
-            alert(Success: Cloud synced. New ${role} PIN activated!);
-        } catch (err) {
-            console.error("Cloud PIN Sync Failed:", err);
-            alert("Database Error: Failed to push new PIN to cloud.");
-        }
-    } else {
-        // Fallback Local Sandbox Memory Update
-        SECURITY_PINS[role] = newPin;
-        alert(Sandbox Mode: Local ${role} PIN updated to ${newPin});
-    }
-
-    document.getElementById(inputId).value = '';
-}
-
         async function initSystemStorage() {
             const badge = document.getElementById('sync-badge');
             
             if (isFirebaseSetupPlaceholder) {
                 badge.className = "bg-blue-500/10 border border-blue-500/20 text-blue-400 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2";
-                badge.innerHTML = <span class="w-2 h-2 rounded-full bg-blue-400"></span> Sandbox Sandbox Mode;
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-400"></span> Local Sandbox Active`;
                 isCloudConnected = false;
                 renderStock();
                 renderRecentTransactions();
@@ -420,22 +357,20 @@
                 isCloudConnected = true;
                 
                 badge.className = "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2";
-                badge.innerHTML = <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Cloud Stream Connected;
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Cloud Stream Connected`;
 
-                // 🔐 Real-Time Cloud Authentication Stream Hook
-                // Looks inside collection "security", document "config" for fields: staff_pin and manager_pin
+                // Live Sync Security PIN Documents Realtime Stream
                 onSnapshot(doc(db, "security", "config"), (docSnap) => {
                     if (docSnap.exists()) {
                         const data = docSnap.data();
-                        if (data.staff_pin) SECURITY_PINS.staff = data.staff_pin;
-                        if (data.manager_pin) SECURITY_PINS.manager = data.manager_pin;
+                        if (data.staff_pin) SECURITY_PINS.staff = String(data.staff_pin);
+                        if (data.manager_pin) SECURITY_PINS.manager = String(data.manager_pin);
                     } else {
-                        // Creates base security schema default records if they don't exist yet
                         setDoc(doc(db, "security", "config"), { staff_pin: "1234", manager_pin: "2540" });
                     }
                 });
 
-                // Live Streaming Cloud Stock Sync Listener Hook
+                // Live Sync Stock Inventory Document Stream
                 onSnapshot(collection(db, "stock"), (snapshot) => {
                     let updatedStock = [];
                     snapshot.forEach(doc => {
@@ -447,15 +382,17 @@
                     }
                 });
 
-                // Live Streaming Shift Vault Tracker Loader
+                // Live Sync Shift Cash Vault Drawer Totals
                 onSnapshot(doc(db, "vault", "current_shift"), (docSnap) => {
                     if (docSnap.exists()) {
                         shiftVault = docSnap.data();
                         syncVaultLabels();
+                    } else {
+                        setDoc(doc(db, "vault", "current_shift"), { mpesa: 0, cash: 0 });
                     }
                 });
 
-                // Live Stream Recent Transactions Listener Terminal 
+                // Live Sync Recent Shift Transaction Ledger Receipts (Limit 25)
                 const txQuery = query(collection(db, "transactions"), orderBy("timestampOrder", "desc"), limit(25));
                 onSnapshot(txQuery, (snapshot) => {
                     pastTransactions = [];
@@ -466,14 +403,13 @@
                 });
 
             } catch (err) {
-                console.error("Firebase Initialization Failure:", err);
+                console.error("Firebase pipeline initialization fail:", err);
                 isCloudConnected = false;
                 renderStock();
             }
         }
 
         function setupUIGlobals() {
-            window.updateSystemPin = updateSystemPin;
             window.selectPortalRole = selectPortalRole;
             window.backToRoleSelection = backToRoleSelection;
             window.verifyPortalLogin = verifyPortalLogin;
@@ -488,6 +424,7 @@
             window.closeReceiptModal = closeReceiptModal;
             window.dispatchWhatsAppReceipt = dispatchWhatsAppReceipt;
             window.setWhatsAppEndpoint = setWhatsAppEndpoint;
+            window.updateSystemPin = updateSystemPin;
             window.executeShiftReset = executeShiftReset;
             window.renderStock = renderStock;
             window.cleanPhoneNumber = cleanPhoneNumber;
@@ -498,17 +435,15 @@
         }
 
         // ==========================================
-        //  🔐 AUTHENTICATION PORTAL CORE CONTROL LOGIC
+        //         🔐 INTERFACE ROUTING ACCESS ENGINE
         // ==========================================
         function selectPortalRole(role) {
             activeSelectedRole = role;
             
-            // Highlight select cards visually
-            document.getElementById('role-btn-staff').className = p-4 bg-slate-800 border-2 ${role === 'staff' ? 'border-blue-500 bg-slate-800/80' : 'border-transparent'} rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group;
-            document.getElementById('role-btn-manager').className = p-4 bg-slate-800 border-2 ${role === 'manager' ? 'border-amber-500 bg-slate-800/80' : 'border-transparent'} rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group;
+            document.getElementById('role-btn-staff').className = `p-4 bg-slate-800 border-2 ${role === 'staff' ? 'border-blue-500 bg-slate-800/80' : 'border-transparent'} rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group`;
+            document.getElementById('role-btn-manager').className = `p-4 bg-slate-800 border-2 ${role === 'manager' ? 'border-amber-500 bg-slate-800/80' : 'border-transparent'} rounded-xl text-center hover:bg-slate-750 transition cursor-pointer flex flex-col items-center gap-2 group`;
 
-            // Display PIN card entry block
-            document.getElementById('pin-prompt-text').textContent = Enter ${role === 'manager' ? 'Manager Secret PIN' : 'Staff Station Key'};
+            document.getElementById('pin-prompt-text').textContent = `Enter ${role === 'manager' ? 'Manager Secret PIN' : 'Staff Station Key'}`;
             document.getElementById('portal-input-pin').value = '';
             document.getElementById('portal-error-text').classList.add('hidden');
             document.getElementById('portal-pin-zone').classList.remove('hidden');
@@ -527,7 +462,6 @@
             const targetCorrectPin = SECURITY_PINS[activeSelectedRole];
 
             if (typedPin === targetCorrectPin) {
-                // Pin Validated! Grant access entryway
                 document.getElementById('portal-gate').classList.add('hidden');
                 
                 const navSub = document.getElementById('nav-station-sub');
@@ -539,7 +473,6 @@
                     navSub.textContent = "Admin Manager Dashboard";
                     navSub.className = "text-[10px] text-amber-400 uppercase tracking-widest font-bold";
                     
-                    // Hide POS layout, show dedicated administrative view
                     stockDeck.classList.add('hidden');
                     billingDeck.classList.add('hidden');
                     managerDeck.classList.remove('hidden');
@@ -548,7 +481,6 @@
                     navSub.textContent = "Active Cashier Shift";
                     navSub.className = "text-[10px] text-blue-400 uppercase tracking-widest font-bold";
                     
-                    // Show standard high-speed cashier billing interface
                     managerDeck.classList.add('hidden');
                     stockDeck.classList.remove('hidden');
                     billingDeck.classList.remove('hidden');
@@ -563,7 +495,6 @@
         }
 
         function lockSystemStation() {
-            // Instantly clear transient session variables and bounce out to front gate authentication portal
             clearBasket();
             activeSelectedRole = null;
             document.getElementById('portal-input-pin').value = '';
@@ -574,15 +505,46 @@
         }
 
         // ==========================================
-        //         UI OPERATIONAL TERMINAL ENGINES
+        //       ⚙️ ADMINISTRATIVE SECURITY PIN ADJUSTMENT
+        // ==========================================
+        async function updateSystemPin(role) {
+            const inputId = role === 'staff' ? 'new-staff-pin-input' : 'new-manager-pin-input';
+            const newPin = document.getElementById(inputId).value.trim();
+
+            if (newPin.length !== 4 || isNaN(newPin)) {
+                alert("Validation Failed: PIN must be exactly 4 numeric characters.");
+                return;
+            }
+
+            if (isCloudConnected) {
+                try {
+                    const configRef = doc(db, "security", "config");
+                    if (role === 'staff') {
+                        await updateDoc(configRef, { staff_pin: newPin });
+                    } else {
+                        await updateDoc(configRef, { manager_pin: newPin });
+                    }
+                    alert(`Success: Cloud Synced. New ${role} PIN activated!`);
+                } catch (err) {
+                    console.error("Cloud PIN Save Failure:", err);
+                    alert("Database write rejected.");
+                }
+            } else {
+                SECURITY_PINS[role] = newPin;
+                alert(`Sandbox Mode: Local ${role} PIN adjusted to ${newPin}`);
+            }
+            document.getElementById(inputId).value = '';
+        }
+
+        // ==========================================
+        //         🛒 POS TERMINAL CORE GRAPHICS RENDER
         // ==========================================
         function renderStock() {
             const stockGrid = document.getElementById('stock-grid');
             const quickGrid = document.getElementById('quick-tap-grid');
-            if(!stockGrid || !quickGrid) return; // Protect layout if manager view is active
+            if(!stockGrid || !quickGrid) return; 
             
             const queryVal = document.getElementById('search-bar').value.toLowerCase();
-            
             stockGrid.innerHTML = '';
             quickGrid.innerHTML = '';
 
@@ -628,7 +590,7 @@
             const product = stock.find(p => p.id === id);
             if (!product) return;
             if (product.stock <= 0) {
-                alert(Operation Halt: ${product.name} stock has run out!);
+                alert(`Stock Depleted: ${product.name} is out of stock!`);
                 return;
             }
             if (basket[id]) {
@@ -693,12 +655,12 @@
                 container.innerHTML = `
                     <div class="h-full flex flex-col items-center justify-center text-slate-600 gap-2 p-6 text-center m-auto">
                         <i data-lucide="smile" class="w-8 h-8 stroke-[1.5]"></i>
-                        <p class="text-xs">Bar basket empty. Tap items to create a bill.</p>
+                        <p class="text-xs">Bar basket empty. Tap items to build invoice bill.</p>
                     </div>
                 `;
             }
 
-            totalLabel.textContent = ${accumulatedTotal} KES;
+            totalLabel.textContent = `${accumulatedTotal} KES`;
             calculateCashChange(); 
             lucide.createIcons();
         }
@@ -743,20 +705,20 @@
                 balanceLabel.textContent = "0 KES";
                 balanceLabel.className = "font-mono font-bold text-amber-500";
             } else {
-                balanceLabel.textContent = ${numericTendered - numericTotal} KES;
+                balanceLabel.textContent = `${numericTendered - numericTotal} KES`;
                 balanceLabel.className = "font-mono font-bold text-emerald-400 animate-pulse";
             }
         }
 
         async function executeCheckout() {
             if (Object.keys(basket).length === 0) {
-                alert("Transaction Blocked: No items inside active basket.");
+                alert("Checkout Cancelled: Active sales bill container is empty.");
                 return;
             }
 
             const phoneField = document.getElementById('cust-phone');
             if (!phoneField.value || phoneField.value.length < 9) {
-                alert("Validation Failure: Valid destination phone contact string required.");
+                alert("Validation Failure: Valid customer phone required for receipt distribution.");
                 phoneField.focus();
                 return;
             }
@@ -829,15 +791,15 @@
             if(!container) return;
             
             container.innerHTML = '';
-            counter.textContent = ${pastTransactions.length} paid;
+            counter.textContent = `${pastTransactions.length} paid`;
 
             if (pastTransactions.length === 0) {
-                container.innerHTML = <div class="h-full flex flex-col items-center justify-center text-slate-700 p-4 text-center m-auto"><p class="text-[11px]">No sales yet this shift.</p></div>;
+                container.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-slate-700 p-4 text-center m-auto"><p class="text-[11px]">No sales recorded yet this shift.</p></div>`;
                 return;
             }
 
             pastTransactions.forEach((txn, index) => {
-                const itemSummary = Object.values(txn.items).map(i => ${i.qty}x ${i.name}).join(', ');
+                const itemSummary = Object.values(txn.items).map(i => `${i.qty}x ${i.name}`).join(', ');
                 const isMpesa = txn.paymentMode === 'mpesa';
 
                 const txnRowHTML = `
@@ -871,7 +833,7 @@
 
         function launchReceiptModal(invoice) {
             document.getElementById('receipt-timestamp').textContent = invoice.timestamp;
-            document.getElementById('receipt-total-amt').textContent = ${invoice.total} KES;
+            document.getElementById('receipt-total-amt').textContent = `${invoice.total} KES`;
             document.getElementById('receipt-pay-method').textContent = invoice.paymentMode;
 
             const logBox = document.getElementById('receipt-items-log');
@@ -897,7 +859,7 @@
         }
 
         // ==========================================
-        //         WHATSAPP ENGINE DISPATCH HOOKS
+        //         💬 WHATSAPP RECENT COMM ENGINE
         // ==========================================
         async function dispatchWhatsAppReceipt() {
             if (!currentCompletedInvoice) return;
@@ -905,28 +867,28 @@
             const btn = document.getElementById('whatsapp-send-btn');
             const originalHTML = btn.innerHTML;
 
-            let message = 🌟 *WELCOME TO SWEET FANCY PUB!* 🌟\n\n;
-            message += Thank you for partying with us! Here is your digital receipt:\n;
-            message += ------------------------------------\n;
+            let message = `🌟 *WELCOME TO SWEET FANCY PUB!* 🌟\n\n`;
+            message += `Thank you for partying with us! Here is your digital receipt:\n`;
+            message += `------------------------------------\n`;
 
             Object.keys(currentCompletedInvoice.items).forEach(id => {
                 const item = currentCompletedInvoice.items[id];
-                message += ▪️ ${item.qty}x ${item.name} -> ${item.price * item.qty} KES\n;
+                message += `▪️ ${item.qty}x ${item.name} -> ${item.price * item.qty} KES\n`;
             });
 
-            message += ------------------------------------\n;
-            message += *Total Paid: ${currentCompletedInvoice.total} KES* via ${currentCompletedInvoice.paymentMode.toUpperCase()}\n\n;
-            message += _Enjoy your night and vibe responsibly!_ 🍾🔥;
+            message += `------------------------------------\n`;
+            message += `*Total Paid: ${currentCompletedInvoice.total} KES* via ${currentCompletedInvoice.paymentMode.toUpperCase()}\n\n`;
+            message += `_Enjoy your night and vibe responsibly!_ 🍾🔥`;
 
             if (configWhatsAppMode === 'api') {
                 const webhookUrl = document.getElementById('wa-webhook-url').value.trim();
                 if(!webhookUrl) {
-                    alert("Configuration Error: Cloud URL endpoint string missing.");
+                    alert("Configuration Missing: Webhook destination string missing.");
                     return;
                 }
 
                 btn.disabled = true;
-                btn.innerHTML = <span class="animate-pulse">Firing Cloud Hook...</span>;
+                btn.innerHTML = `<span class="animate-pulse">Firing Cloud Hook...</span>`;
 
                 try {
                     await fetch(webhookUrl, {
@@ -938,9 +900,9 @@
                             txnId: currentCompletedInvoice.id
                         })
                     });
-                    alert("Cloud Hook Fired Successfully!");
+                    alert("Cloud Webhook Dispatched Successfully!");
                 } catch(e) {
-                    alert("Network Error: Webhook failed. Reverting to browser tab dispatch.");
+                    alert("Connection Fallback: Webhook timed out. Routing via local window deep link.");
                     openWhatsAppDeepLink(currentCompletedInvoice.phone, message);
                 } finally {
                     btn.disabled = false;
@@ -954,7 +916,7 @@
 
         function openWhatsAppDeepLink(phone, message) {
             const encodedMessage = encodeURIComponent(message);
-            window.open(https://web.whatsapp.com/send?phone=${phone}&text=${encodedMessage}, '_blank');
+            window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`, '_blank');
         }
 
         function setWhatsAppEndpoint(mode) {
@@ -964,12 +926,12 @@
             const apiBox = document.getElementById('api-hook-config');
 
             if (mode === 'web') {
-                webBtn.className = "py-2 text-xs font-semibold rounded-lg bg-emerald-500/10 border border-emerald-500 text-emerald-400 text-center cursor-pointer";
-                appBtn.className = "py-2 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-center cursor-pointer";
+                webBtn.className = "py-2 text-xs font-semibold rounded-lg bg-emerald-500/10 border border-emerald-500 text-emerald-400 text-center cursor-pointer flex-1";
+                appBtn.className = "py-2 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-center cursor-pointer flex-1";
                 apiBox.classList.add('hidden');
             } else {
-                appBtn.className = "py-2 text-xs font-semibold rounded-lg bg-emerald-500/10 border border-emerald-500 text-emerald-400 text-center cursor-pointer";
-                webBtn.className = "py-2 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-center cursor-pointer";
+                appBtn.className = "py-2 text-xs font-semibold rounded-lg bg-emerald-500/10 border border-emerald-500 text-emerald-400 text-center cursor-pointer flex-1";
+                webBtn.className = "py-2 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-center cursor-pointer flex-1";
                 apiBox.classList.remove('hidden');
             }
         }
@@ -978,21 +940,22 @@
             const mLabel = document.getElementById('vault-mpesa');
             const cLabel = document.getElementById('vault-cash');
             if(mLabel && cLabel) {
-                mLabel.textContent = ${shiftVault.mpesa} KES;
-                cLabel.textContent = ${shiftVault.cash} KES;
+                mLabel.textContent = `${shiftVault.mpesa} KES`;
+                cLabel.textContent = `${shiftVault.cash} KES`;
             }
         }
 
         async function executeShiftReset() {
             const inputField = document.getElementById('reset-lock-input');
             if (inputField.value.trim() !== 'RESET') {
-                alert("Verification token mismatch. Reset aborted.");
+                alert("Verification string mismatch. Clear action aborted.");
                 return;
             }
 
             if (isCloudConnected) {
                 try {
                     await setDoc(doc(db, "vault", "current_shift"), { mpesa: 0, cash: 0 });
+                    alert("Database Ledger Zeroed out successfully!");
                 } catch(e) { console.error(e); }
             } else {
                 shiftVault.mpesa = 0;
@@ -1000,10 +963,10 @@
                 pastTransactions = [];
                 syncVaultLabels();
                 renderRecentTransactions();
+                alert("Local Memory Reset Completed.");
             }
 
             inputField.value = '';
-            alert("Success: Shift ledgers zeroed out.");
             lockSystemStation();
         }
     </script>
